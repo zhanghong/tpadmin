@@ -1,4 +1,19 @@
 {
+    "name": "Zhanghong/tpadmin",
+    "description": "the admin framework based on thinkphp 5.1",
+    "keywords": [
+        "framework",
+        "tp5.1",
+        "thinkphp",
+        "admin"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ZhangHong",
+            "email": "zhanghong_bean@126.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Zhanghong\\Tpadmin\\": "src/"
