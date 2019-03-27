@@ -1,5 +1,5 @@
 {
-    "name": "Zhanghong/tpadmin",
+    "name": "zhanghong/tpadmin",
     "description": "the admin framework based on thinkphp 5.1",
     "keywords": [
         "framework",
@@ -18,5 +18,8 @@
         "psr-4": {
             "Zhanghong\\Tpadmin\\": "src/"
         }
+    },
+    "require": {
+        "phpunit/phpunit": "~5"
     }
 }

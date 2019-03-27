@@ -1,7 +1,14 @@
 <h1 align="center"> tpadmin </h1>
 
 <p align="center"> the admin framework based on thinkphp 5.1.</p>
-
+<p align="center">
+  <a href="https://styleci.io/repos/177950338">
+    <img src="https://styleci.io/repos/177950338/shield?branch=master" alt="StyleCI">
+  </a>
+   <a href="https://travis-ci.org/zhanghong/tpadmin">
+      <img src="https://travis-ci.org/zhanghong/tpadmin.svg?branch=master" alt="TravisCi">
+  </a>
+</p>
 
 ## Installing
 
