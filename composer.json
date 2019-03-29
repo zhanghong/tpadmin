@@ -16,8 +16,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Zhanghong\\Tpadmin\\": "src/"
-        }
+            "tpadmin\\": "src/"
+        },
+        "files": [
+            "helper.php"
+        ]
     },
     "require": {
         "phpunit/phpunit": "~5"
