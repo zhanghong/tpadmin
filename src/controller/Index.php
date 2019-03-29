@@ -2,10 +2,10 @@
 
 namespace tpadmin\controller;
 
-class Index
+class Index extends Controller
 {
     public function index()
     {
-        return 'hello, This is tpadmin';
+        return $this->fetch('index/index');
     }
 }

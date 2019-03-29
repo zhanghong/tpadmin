@@ -12,7 +12,7 @@ return [
         // public目录名
         'public_name' => 'public',
         'tpl_replace_string' => [
-            '__TADMIN_ASSETS__' => '/tmp/assets',
+            '__TPADMIN_ASSETS__' => '/tmp/assets',
         ],
     ],
 ];
