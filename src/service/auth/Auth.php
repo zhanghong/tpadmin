@@ -73,7 +73,7 @@ class Auth implements contract\Auth
     public function attempt(array $credentials)
     {
         $adminer = $this->adminer = $this->authenticate->retrieveByCredentials([
-            'admin_account' => $credentials['admin_account'],
+            'name' => $credentials['admin_account'],
         ]);
         if (!$adminer) {
             return false;
@@ -84,6 +84,6 @@ class Auth implements contract\Auth
 
     protected function validCredentials($adminer, array $credentials)
     {
-        return password_verify($credentials['admin_password'], $adminer->admin_password);
+        return password_verify($credentials['admin_password'], $adminer->password);
     }
 }

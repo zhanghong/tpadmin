@@ -23,6 +23,7 @@
         ]
     },
     "require": {
-        "phpunit/phpunit": "~5"
+        "phpunit/phpunit": "~5",
+        "topthink/think-captcha": "^2.0"
     }
 }

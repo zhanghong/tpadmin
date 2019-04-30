@@ -19,12 +19,11 @@ class Passport extends Controller
     public function user()
     {
         try {
-            $user = $this->auth->user();
-
+            $adminer = $this->auth->user();
             return json(
                 [
-                    'admin_account' => $user->admin_account,
-                    'login_at' => $user->login_at,
+                    'name' => $adminer->name,
+                    'login_time' => $adminer->login_time,
                 ]
             );
         } catch (\Exception $e) {
