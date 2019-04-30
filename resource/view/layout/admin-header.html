@@ -10,13 +10,13 @@
         <div class="am-fr tpl-header-navbar">
             <ul>
                 <li class="am-text-sm tpl-header-navbar-welcome">
-                    <a href="javascript:;">欢迎你, <span>#</span> ！</a>
+                    <a href="javascript:;">欢迎你, <span>{$adminer.name}</span> ！</a>
                 </li>
                 <li class="am-text-sm">
                     <a href="/" target="_blank"><span class="am-icon-desktop"></span> 主页</a>
                 </li>
                 <li class="am-text-sm">
-                    <a href="#"><span class="am-icon-sign-out"></span> 退出</a>
+                    <a href="{:url('tpadmin.auth.passport.logout')}"><span class="am-icon-sign-out"></span> 退出</a>
                 </li>
             </ul>
         </div>

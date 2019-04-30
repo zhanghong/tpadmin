@@ -8,6 +8,8 @@ use think\Container;
 use think\facade\Config;
 use think\Controller as ThinkController;
 
+use tpadmin\service\auth\facade\Auth;
+
 abstract class Controller extends ThinkController
 {
     protected $viewPath = '';
@@ -56,8 +58,7 @@ abstract class Controller extends ThinkController
 
     public function assignCommon()
     {
-        // $menus = app(Menu::class)->toTree();
-        // $adminer = Auth::user();
-        // $this->view->assign(compact('menus', 'adminer'));
+        $adminer = Auth::user();
+        $this->view->assign(compact('adminer'));
     }
 }
