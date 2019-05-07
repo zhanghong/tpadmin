@@ -82,3 +82,67 @@ if (!function_exists('array_deep_merge')) {
         return $a;
     }
 }
+
+if (!function_exists('left_menu_item_class')) {
+    function left_menu_item_class(array $current_ancestor_ids, array $menu_item){
+      $class_name = "";
+      // if(in_array($menu_item["id"], $   )){
+      //   if(empty($menu_item["children"])){
+      //     $class_name = "active";
+      //   }else{
+      //     $class_name = "active open";
+      //   }
+      // }
+      return $class_name;
+    }
+}
+
+if (!function_exists('format_show_time')) {
+    function format_show_time($int_time, $type = ""){
+      if(empty($int_time)){
+        return "";
+      }else if(is_numeric($int_time)){
+        switch ($type) {
+        case 'zh_time':
+          $format_str = "m月d日 H:i:s";
+          break;
+        case 'no_second':
+          $format_str = "Y-m-d H:i";
+          break;
+        case 'date_node':
+          $format_str = "Y.m.d";
+          break;
+        case 'small_date_node':
+          $format_str = "y.m.d";
+          break;
+        case 'no_year_node':
+          $format_str = "m.d H:i:s";
+          break;
+        case 'short_node':
+          $format_str = "m.d";
+          break;
+        case 'only_date':
+          $format_str = "Y-m-d";
+          break;
+        case 'month_day':
+          $format_str = "m-d";
+          break;
+        case 'date_dir':
+          $format_str = "Y/m/d";
+          break;
+        case 'ymd_dir':
+          $format_str = "Ymd";
+          break;
+        case 'weekday':
+          $format_str = "D";
+          break;
+        default:
+          $format_str = "Y-m-d H:i:s";
+          break;
+        }
+        return date($format_str, $int_time);
+      }else{
+        return $int_time;
+      }
+    }
+}

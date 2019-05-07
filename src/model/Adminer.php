@@ -2,6 +2,10 @@
 
 namespace tpadmin\model;
 
+use tpadmin\service\auth\facade\Auth;
+use tpadmin\validate\AdminerCreate as ValidateCreate;
+use tpadmin\validate\AdminerUpdate as ValidateUpdate;
+use think\exception\ValidateException;
 use tpadmin\service\auth\contract\Authenticate;
 
 class Adminer extends Model implements Authenticate
@@ -34,5 +38,52 @@ class Adminer extends Model implements Authenticate
     public function retrieveByIdentifier($identifier)
     {
         return $this->find($identifier);
+    }
+
+    static public function createItem($data)
+    {
+        $validate = new ValidateCreate;
+        if (!$validate->check($data)) {
+            throw new ValidateException($validate->getError());
+        }
+
+        $adminer = new self;
+        $adminer->save($data);
+
+        return $adminer;
+    }
+
+    static public function updateItem($id, $data)
+    {
+        $adminer = self::find($id);
+        if(empty($adminer)){
+            return false;
+        }
+
+        return $adminer->updateInfo($data);
+    }
+
+    public function updateInfo($data)
+    {
+        $data['id'] = $this->id;
+        $validate = new ValidateUpdate;
+        if (!$validate->check($data)) {
+            throw new ValidateException($validate->getError());
+        }
+
+        $this->save($data, ['id' => $this->id]);
+        return $this;
+    }
+
+    static public function deleteItem($id)
+    {
+        $current_adminer = Auth::user();
+        if(empty($current_adminer)){
+            throw new \Exception('请先登录系统');
+        }else if($id == $current_adminer->id){
+            throw new \Exception('自己不能删除自己账号');
+        }
+
+        return self::destroy($id);
     }
 }

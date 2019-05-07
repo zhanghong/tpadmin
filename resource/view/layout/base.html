@@ -1,21 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-{include file="layout/meta" /}
-</head>
-<body data-type="index">
-    <script src="__TPADMIN_ASSETS__/js/theme.js"></script>
-    <div class="am-g tpl-g">
-        <!-- 头部 -->
-        {include file="layout/admin-header" /}
-        {include file="widget/admin-left" /}
-        <div class="tpl-content-wrapper content-wrapper">
-            {block name="main"}
-            {/block}
-            {include file="layout/admin-footer" /}
+  <head>
+    {include file="layout/_meta" /}
+
+    {block name="page_style"}{/block}
+  </head>
+
+  <body class="no-skin">
+    <div id="navbar" class="navbar navbar-default ace-save-state">
+      <div class="navbar-container ace-save-state" id="navbar-container">
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+          <span class="sr-only">Toggle sidebar</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-header pull-left">
+          <a href="{:url('[tpadmin.index]')}" class="navbar-brand">
+            <small>
+              <i class="fa fa-ra"></i>
+              后台管理
+            </small>
+          </a>
         </div>
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+          <ul class="nav ace-nav">
+            <li class="light-blue dropdown-modal">
+              <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                <span class="user-info">
+                  <small>Welcome,</small>
+                  {$current_adminer->name}
+                </span>
+                <i class="ace-icon fa fa-caret-down"></i>
+              </a>
+
+              <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                <li>
+                  <a href="{:url('personal/public_edit_info')}">
+                    <i class="ace-icon fa fa-user"></i>
+                    个人设置
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="{:url('[tpadmin.auth.passport.logout]')}">
+                    <i class="ace-icon fa fa-power-off"></i>
+                    退出
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div><!-- /.navbar-container -->
     </div>
-{include file="layout/footer" /}
-{block name="footer"}{/block}
-</body>
+
+    <div class="main-container ace-save-state" id="main-container">
+      <script type="text/javascript">
+      try {
+        ace.settings.loadState('main-container');
+      } catch (e) {
+
+      }
+      </script>
+
+      {include file="widget/_left_menu" /}
+
+      <div class="main-content">
+        <div class="main-content-inner">
+        {block name="main_content"}{/block}
+        </div>
+      </div><!-- /.main-content -->
+
+      {include file="layout/_admin_footer" /}
+
+      <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+      </a>
+    </div><!-- /.main-container -->
+
+    <!-- basic scripts -->
+    {include file="layout/_footer" /}
+    <script src="__TPADMIN_ASSETS__/js/ace-elements.min.js"></script>
+    <script src="__TPADMIN_ASSETS__/js/ace.min.js"></script>
+    <!-- inline scripts related to this page -->
+    <script src="__TPADMIN_ASSETS__/plugins/artDialog/dist/dialog.js"></script>
+    {block name="page_js"}{/block}
+    <!--artDialog end-->
+    <script>
+      var u = $(".active").parent('ul');
+
+      var uc = u.attr("class");//
+
+      if (uc == 'submenu') {
+        u.parent().attr("class", "open active");
+        if(u.parent().parent().attr('class')=='submenu'){
+          u.parent().parent().parent().attr("class","open active");
+        }
+      }
+
+      //弹出图片
+      function alert_img(url, width, heigth, title) {
+        art.dialog({
+          padding: 0,
+          title: title,
+          content: '<img src="' + url + '" width="' + width + '" height="' + heigth + '" />',
+          lock: true
+        });
+      }
+
+      //弹出确认操作
+      function alert_del(url, title) {
+        var art = dialog({
+          title: '删除警告',
+          content: title,
+          okValue: '确定',
+          ok: function () {
+            this.title('提交中…');
+            $.ajax({
+              url: url,
+              type: "DELETE",
+              dataType: "JSON",
+              success: function(data){
+                if(data["code"]){
+                  // location.href = data["url"];
+                }else{
+                  alert(data["msg"]);
+                }
+                location.reload();
+              }, error: function () {
+                alert("数据执行错误！");
+              }
+            });
+            return false;
+          },
+          cancelValue: '取消',
+          cancel: function () {}
+        });
+        art.show();
+      }
+    </script>
+  </body>
 </html>

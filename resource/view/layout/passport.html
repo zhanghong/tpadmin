@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        {include file="layout/_meta" /}
+        {block name="page_style"}{/block}
+    </head>
 
-<head>
-{include file="layout/meta" /}
-</head>
-<body data-type="login">
-{block name="main"}
-{/block}
-{include file="layout/footer" /}
-{block name="footer"}{/block}
-</body>
+    <body class="login-layout">
+        <div class="main-container">
+            <div class="main-content login">
+                {block name="main"}{/block}
+            </div><!-- /.main-content -->
+        </div><!-- /.main-container -->
+
+        {include file="layout/_footer" /}
+        {block name="footer"}{/block}
+    </body>
 </html>

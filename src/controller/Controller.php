@@ -59,8 +59,11 @@ abstract class Controller extends ThinkController
 
     public function assignCommon()
     {
-        $menus = app(Menu::class)->toTree();
-        $adminer = Auth::user();
-        $this->view->assign(compact('menus', 'adminer'));
+        // $menu_tree = app(Menu::class)->toTree();
+        $menu_tree = [];
+        $current_adminer = Auth::user();
+        $this->current_adminer = $current_adminer;
+        $current_ancestor_ids = [];
+        $this->view->assign(compact('menu_tree', 'current_adminer', 'current_ancestor_ids'));
     }
 }
