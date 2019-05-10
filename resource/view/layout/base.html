@@ -88,57 +88,71 @@
     {block name="page_js"}{/block}
     <!--artDialog end-->
     <script>
-      var u = $(".active").parent('ul');
+        var u = $(".active").parent('ul');
 
-      var uc = u.attr("class");//
+        var uc = u.attr("class");//
 
-      if (uc == 'submenu') {
-        u.parent().attr("class", "open active");
-        if(u.parent().parent().attr('class')=='submenu'){
-          u.parent().parent().parent().attr("class","open active");
+        if (uc == 'submenu') {
+            u.parent().attr("class", "open active");
+            if(u.parent().parent().attr('class')=='submenu'){
+                u.parent().parent().parent().attr("class","open active");
+            }
         }
-      }
 
-      //弹出图片
-      function alert_img(url, width, heigth, title) {
-        art.dialog({
-          padding: 0,
-          title: title,
-          content: '<img src="' + url + '" width="' + width + '" height="' + heigth + '" />',
-          lock: true
-        });
-      }
-
-      //弹出确认操作
-      function alert_del(url, title) {
-        var art = dialog({
-          title: '删除警告',
-          content: title,
-          okValue: '确定',
-          ok: function () {
-            this.title('提交中…');
-            $.ajax({
-              url: url,
-              type: "DELETE",
-              dataType: "JSON",
-              success: function(data){
-                if(data["code"]){
-                  // location.href = data["url"];
-                }else{
-                  alert(data["msg"]);
-                }
-                location.reload();
-              }, error: function () {
-                alert("数据执行错误！");
-              }
+        //弹出图片
+        function alert_img(url, width, heigth, title) {
+            art.dialog({
+                padding: 0,
+                title: title,
+                content: '<img src="' + url + '" width="' + width + '" height="' + heigth + '" />',
+                lock: true
             });
-            return false;
-          },
-          cancelValue: '取消',
-          cancel: function () {}
-        });
-        art.show();
-      }
+        }
+
+        //弹出确认操作
+        function alert_del(clickItem) {
+            var $clickItem = $(clickItem);
+
+            var url = $clickItem.data('del-href');
+            if(typeof(url) == "undefined"){
+                return false;
+            }
+
+            var data = [];
+            var id = $clickItem.data('del-id');
+            if(typeof(id) != "undefined"){
+                data['id'] = id;
+            }
+
+            var art = dialog({
+                title: '删除警告',
+                content: '确认要删除吗？',
+                okValue: '确定',
+                ok: function () {
+                    this.title('提交中…');
+                    $.ajax({
+                        url: url,
+                        type: "DELETE",
+                        dataType: "JSON",
+                        data: data,
+                        success: function(data){
+                            if(data["code"]){
+                                // location.href = data["url"];
+                            }else{
+                                alert(data["msg"]);
+                            }
+                            location.reload();
+                        }, error: function () {
+                            alert("数据执行错误！");
+                        }
+                    });
+                    return false;
+                },
+                cancelValue: '取消',
+                cancel: function () {}
+            });
+            art.showModal();
+        }
     </script>
   </body>
 </html>

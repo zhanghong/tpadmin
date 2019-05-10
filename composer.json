@@ -24,6 +24,7 @@
     },
     "require": {
         "phpunit/phpunit": "~5",
-        "topthink/think-captcha": "^2.0"
+        "topthink/think-captcha": "^2.0",
+        "zzstudio/think-auth": "^1.0"
     }
 }

@@ -4,27 +4,37 @@ namespace tpadmin\model;
 
 use Db;
 use think\Model as Base;
+use think\exception\ValidateException;
 
 abstract class Model extends Base
 {
-    // public function __construct($data = [])
-    // {
-    //     if ($this->table) {
-    //         $this->table = Db::getConfig('prefix').$this->table;
-    //     }
-    //     parent::__construct($data);
-    // }
+    static protected function baesCreateItem(array $data, $validate = NULL)
+    {
+        if (!empty($validate) && !$validate->check($data)) {
+            throw new ValidateException($validate->getError());
+        }
 
-    // public function updateOrCreate(array $attributes, array $values = [])
-    // {
-    //     $first = $this->where($attributes)->find();
-    //     if ($first) {
-    //         $first->data($values);
-    //         $first->save();
+        return self::create($data);
+    }
 
-    //         return $first;
-    //     } else {
-    //         return self::create($values, true);
-    //     }
-    // }
+    static protected function baesUpdateItem($id, array $data, $validate = NULL)
+    {
+        $id = intval($id);
+        $item = self::find($id);
+        if(empty($item)){
+            throw new \Exception('未找到更新记录');
+        }
+
+        return $item->runUpdate($data, $validate);
+    }
+
+    protected function runUpdate($data, $validate = NULL)
+    {
+        if (!empty($validate) && !$validate->check($data)) {
+            throw new ValidateException($validate->getError());
+        }
+
+        $this->save($data, ['id' => $this->id]);
+        return $this;
+    }
 }

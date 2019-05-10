@@ -2,6 +2,10 @@
 
 namespace tpadmin\model\traits;
 
+use tpadmin\model\AuthRoleRule;
+use tpadmin\model\AuthRoleUser;
+use tpadmin\service\auth\facade\Auth;
+
 trait Tree
 {
     /**
@@ -21,15 +25,15 @@ trait Tree
      *
      * @return array
      */
-    public function toTree()
+    public function toTree(string $query_mode = 'user_menu')
     {
-        return $this->buildNestedArray();
+        return $this->buildNestedArray($query_mode);
     }
 
-    public function getChildrenNodes($parentId, $tree = null)
+    public function getChildrenNodes($query_mode, $parentId, $tree = null)
     {
         if (null === $tree) {
-            $tree = $this->toTree();
+            $tree = $this->toTree($query_mode);
         }
 
         foreach ($tree as $key => $value) {
@@ -37,16 +41,16 @@ trait Tree
             if ($value['id'] == $parentId) {
                 return $children;
             }
-            $this->getChildrenNodes($parentId, $children);
+            $this->getChildrenNodes($query_mode, $parentId, $children);
         }
 
         return null;
     }
 
-    public function flatTree(array $nodes = [])
+    public function flatTree(string $query_mode = 'all_list', array $nodes = [])
     {
         if (empty($nodes)) {
-            $nodes = $this->toTree();
+            $nodes = $this->toTree($query_mode);
         }
         $branch = [];
 
@@ -59,7 +63,7 @@ trait Tree
 
             array_push($branch, $value);
             if ($children) {
-                $branch = array_merge($branch, $this->flatTree($children));
+                $branch = array_merge($branch, $this->flatTree($query_mode, $children));
             }
         }
 
@@ -74,16 +78,21 @@ trait Tree
      *
      * @return array
      */
-    protected function buildNestedArray(array $nodes = [], $parentId = 0, $depth = 0)
+    protected function buildNestedArray(string $query_mode, array $nodes = [], $parentId = 0, $depth = 0)
     {
         $branch = [];
 
         if (empty($nodes)) {
-            $nodes = $this->allNodes();
+            if($query_mode == 'all_list'){
+                $nodes = $this->allNodes();
+            }else{
+                $nodes = $this->userNodes();
+            }
         }
+
         foreach ($nodes as $node) {
             if ($node[$this->parentColumn] == $parentId) {
-                $children = $this->buildNestedArray($nodes, $node[$this->pk], $depth + 1);
+                $children = $this->buildNestedArray($query_mode, $nodes, $node[$this->pk], $depth + 1);
 
                 if ($children) {
                     $node['children'] = $children;
@@ -98,6 +107,30 @@ trait Tree
 
     protected function allNodes()
     {
-        return $this->order($this->sortColumn, 'asc')->order($this->pk, 'asc')->all()->toArray();
+        return $this->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->all()->toArray();
+    }
+
+    protected function userNodes()
+    {
+        $current_adminer = Auth::user();
+        if(empty($current_adminer)){
+            return [];
+        }
+
+        if($current_adminer->is_default){
+            return $this->allNodes();
+        }
+
+        $role_ids = AuthRoleUser::where('user_id', $current_adminer->id)->column('role_id');
+        if(empty($role_ids)){
+            return [];
+        }
+
+        $rule_ids = AuthRoleRule::whereIn('role_id', $role_ids)->column('rule_id');
+        if(empty($rule_ids)){
+            return [];
+        }
+
+        return $this->whereIn($this->pk, $rule_ids)->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->all()->toArray();
     }
 }

@@ -5,14 +5,18 @@ namespace tpadmin\model;
 use tpadmin\service\auth\facade\Auth;
 use tpadmin\validate\AdminerCreate as ValidateCreate;
 use tpadmin\validate\AdminerUpdate as ValidateUpdate;
-use think\exception\ValidateException;
 use tpadmin\service\auth\contract\Authenticate;
 
 class Adminer extends Model implements Authenticate
 {
+    public function pivotRoles()
+    {
+        return $this->hasMany('AuthRoleUser', 'user_id');
+    }
+
     public function roles()
     {
-        return $this->belongsToMany(Role::class, AdminerRole::class);
+        return $this->belongsToMany('AuthRole', '\\tpadmin\\model\\AuthRoleUser', 'role_id', 'user_id');
     }
 
     public function setPasswordAttr($value)
@@ -43,14 +47,7 @@ class Adminer extends Model implements Authenticate
     static public function createItem($data)
     {
         $validate = new ValidateCreate;
-        if (!$validate->check($data)) {
-            throw new ValidateException($validate->getError());
-        }
-
-        $adminer = new self;
-        $adminer->save($data);
-
-        return $adminer;
+        return $this->baesCreateItem($data, $validate);
     }
 
     static public function updateItem($id, $data)
@@ -67,12 +64,7 @@ class Adminer extends Model implements Authenticate
     {
         $data['id'] = $this->id;
         $validate = new ValidateUpdate;
-        if (!$validate->check($data)) {
-            throw new ValidateException($validate->getError());
-        }
-
-        $this->save($data, ['id' => $this->id]);
-        return $this;
+        return $this->runUpdate($data, $validate);
     }
 
     static public function deleteItem($id)
@@ -84,6 +76,19 @@ class Adminer extends Model implements Authenticate
             throw new \Exception('自己不能删除自己账号');
         }
 
-        return self::destroy($id);
+        $adminer = self::find($id);
+        if(empty($adminer)){
+            return true;
+        }
+
+        return $adminer->runDelete();
+    }
+
+    public function runDelete()
+    {
+        if($this->is_default){
+            throw new \Exception('不能删除默认管理员');
+        }
+        return $this->delete();
     }
 }

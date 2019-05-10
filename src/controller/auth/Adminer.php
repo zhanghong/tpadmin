@@ -3,7 +3,7 @@
 namespace tpadmin\controller\auth;
 
 use tpadmin\model\Adminer as AdminerModel;
-use tpadmin\model\Role as RoleModel;
+use tpadmin\model\AuthRole as AuthRoleModel;
 // use tpadmin\service\upload\contract\Factory as Uploader;
 use tpadmin\controller\Controller;
 use think\exception\ValidateException;
@@ -21,7 +21,7 @@ class Adminer extends Controller
 
     public function index()
     {
-        $paginate = $this->adminer->with('roles')->paginate();
+        $paginate = $this->adminer->paginate();
 
         return $this->fetch('auth/adminer/index', [
             'paginate' => $paginate,
@@ -31,7 +31,7 @@ class Adminer extends Controller
     public function create(Request $request)
     {
         $adminer = [];
-        $roles = RoleModel::all();
+        $roles = AuthRoleModel::all();
         $role_ids = [];
 
         return $this->fetch('auth/adminer/create', compact('adminer', 'role_ids', 'roles'));
@@ -57,8 +57,8 @@ class Adminer extends Controller
             $this->error('未找到被管理员信息');
         }
 
-        $roles = RoleModel::all();
-        $role_ids = []; //$adminer->roles()->column('id');
+        $roles = AuthRoleModel::all();
+        $role_ids = $adminer->roles()->column('id');
 
         return $this->fetch('auth/adminer/edit', compact('adminer', 'role_ids', 'roles'));
     }
@@ -86,6 +86,23 @@ class Adminer extends Controller
         }
 
         return $this->success('删除成功');
+    }
+
+    public function read(Request $request, $id)
+    {
+        return json([
+            'url' => $request->url(),
+            'pathinfo' => $request->pathinfo(),
+            'path' => $request->path(),
+            'method' => $request->method(),
+            'param' => $request->param(),
+            'route' => $request->route(),
+            'routeInfo' => $request->routeInfo(),
+            'dispatch' => $request->dispatch(),
+            'module' => $request->module(true),
+            'controller' => $request->controller(true),
+            'action' => $request->action(true),
+        ]);
     }
 
     // public function save(Request $request)
