@@ -27,6 +27,14 @@ Route::group([
         Route::delete('/rule/:id', 'auth\\Rule@delete')->name('tpadmin.auth.rule.delete');
         Route::get('/rule', 'auth\\Rule@index')->name('tpadmin.auth.rule.index');
         Route::post('/rule', 'auth\\Rule@save')->name('tpadmin.auth.rule.save');
+
+        Route::get('/role/create', 'auth\\Role@create')->name('tpadmin.auth.role.create');
+        Route::get('/role/:id/edit', 'auth\\Role@edit')->name('tpadmin.auth.role.edit');
+        Route::get('/role/:id', 'auth\\Role@read')->name('tpadmin.auth.role.read');
+        Route::put('/role/:id', 'auth\\Role@update')->name('tpadmin.auth.role.update');
+        Route::delete('/role/:id', 'auth\\Role@delete')->name('tpadmin.auth.role.delete');
+        Route::get('/role', 'auth\\Role@index')->name('tpadmin.auth.role.index');
+        Route::post('/role', 'auth\\Role@save')->name('tpadmin.auth.role.save');
     });
 
     // 首页

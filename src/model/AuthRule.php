@@ -3,10 +3,12 @@
 namespace tpadmin\model;
 
 use tpadmin\validate\AuthRule as Validate;
-use think\exception\ValidateException;
 
 class AuthRule extends Model
 {
+    const MENU_MODE_ALL = 'all_menu';
+    const MENU_MODE_USER = 'user_menu';
+
     use traits\Tree;
 
     public function pivotRoles()

@@ -2,88 +2,125 @@
 
 namespace tpadmin\controller\auth;
 
-use tpadmin\model\Permission;
-use tpadmin\model\Role as RoleModel;
-use tpadmin\controller\Controller;
 use think\Request;
+use tpadmin\controller\Controller;
+use think\exception\ValidateException;
+
+use tpadmin\model\AuthRule as AuthRuleModel;
+use tpadmin\model\AuthRole as AuthRoleModel;
 
 class Role extends Controller
 {
-    protected $role;
-
-    public function __construct(RoleModel $role)
-    {
-        parent::__construct();
-        $this->role = $role;
-    }
-
     public function index()
     {
-        $roles = $this->role->with('permissions')->paginate();
+        $paginate = AuthRoleModel::paginateSelect();
 
         return $this->fetch('auth/role/index', [
-            'roles' => $roles,
+            'paginate' => $paginate,
         ]);
     }
 
-    public function edit(Request $request, Permission $permission)
+    public function create(Request $request)
     {
-        $role = $this->role->find($request->get('id', 0));
-        $permissions = $permission->select();
-        $permissionsIds = $role ? $role->permissions()->column('id') : [];
+        $role = ['title' => '', 'status' => 1];
+        $this->assign('role', $role);
+        $this->assign('rule_ids', []);
 
-        return $this->fetch('auth/role/edit', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'permissionsIds' => $permissionsIds,
-        ]);
+        $ruleModel = new AuthRuleModel;
+        $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
+        $this->assign('rule_tree', $rule_tree);
+
+        return $this->fetch('auth/role/form');
     }
 
     public function save(Request $request)
     {
-        try {
-            $data = $request->post();
-            $role = $this->role->create($data, true, true);
-            $permissionsIds = $role->permissions()->column('id');
+        $error_msg = NULL;
 
-            $newPermissionsIds = $request->post('permission_id', []);
-            $newPermissionsIds = array_map(function ($item) {
-                return (int) $item;
-            }, $newPermissionsIds);
-            if (!empty($permissionsIds)) {
-                $detachPermissionsIds = array_diff(
-                    array_merge($permissionsIds, $newPermissionsIds),
-                    $newPermissionsIds
-                );
-                $attachPermissionsIds = array_diff(
-                    $newPermissionsIds,
-                    array_intersect($permissionsIds, $newPermissionsIds)
-                );
-            } else {
-                $attachPermissionsIds = $newPermissionsIds;
-            }
+        $data = $this->getPostData($request);
 
-            if (isset($attachPermissionsIds) && !empty($attachPermissionsIds)) {
-                $role->permissions()->attach(array_values($attachPermissionsIds));
-            }
-
-            if (isset($detachPermissionsIds) && !empty($detachPermissionsIds)) {
-                $role->permissions()->detach(array_values($detachPermissionsIds));
-            }
+        try{
+            $rule = AuthRoleModel::createItem($data);
+        } catch (ValidateException $e) {
+            $error_msg = $e->getError();
         } catch (\Exception $e) {
-            $this->error('保存失败');
+            $error_msg = $e->getError();
         }
-        $this->redirect('tadmin.auth.role');
+
+        if(!is_null($error_msg)){
+            return json(['msg' => $error_msg]);
+            $this->error($error_msg);
+        }
+
+        return json(['hello']);
+        return $this->success('创建成功', url('[tpadmin.auth.role.index]'));
     }
 
-    public function delete(Request $request)
+    public function edit(Request $request, $id)
     {
-        try {
-            $this->role->destroy($request->get('id'));
+        $role = AuthRoleModel::find($id);
+        if(empty($role)){
+            $this->redirect('[tpadmin.auth.role.index]');
+        }
+        $this->assign('role', $role);
+        $this->assign('rule_ids', $role->allowRoleIds());
+
+        $ruleModel = new AuthRuleModel;
+        $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
+        $this->assign('rule_tree', $rule_tree);
+
+        return $this->fetch('auth/role/form');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $error_msg = NULL;
+
+        $data = $this->getPostData($request);
+
+        try{
+            $role = AuthRoleModel::updateItem($id, $data);
+        } catch (ValidateException $e) {
+            $error_msg = $e->getError();
         } catch (\Exception $e) {
-            return $this->error('删除失败');
+            $error_msg = $e->getError();
         }
 
-        return $this->success('删除成功');
+        if(!is_null($error_msg)){
+            $this->error($error_msg);
+        }
+        return $this->success('更新成功', url('[tpadmin.auth.role.index]'));
+    }
+
+    public function read(Request $request, $id)
+    {
+        $this->redirect('[tpadmin.auth.role.index]');
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $error_msg = NULL;
+
+        try {
+            AuthRoleModel::destroy($id);
+        } catch (\Exception $e) {
+            $error_msg = $e->getMessage();
+        }
+
+        if(!is_null($error_msg)){
+            $this->error($error_msg);
+        }
+        return $this->success('删除成功', url('[tpadmin.auth.role.index]'));
+    }
+
+    private function getPostData($request)
+    {
+        $filter_attrs = [
+            ['name' => 'title', 'type' => 'string', 'default' => ''],
+            ['name' => 'status', 'type' => 'boolean', 'default' => 1],
+            ['name' => 'rule_ids', 'type' => 'array', 'default' => []],
+        ];
+        $data = $this->filterPostData($request, $filter_attrs);
+        return $data;
     }
 }

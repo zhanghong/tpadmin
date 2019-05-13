@@ -25,7 +25,7 @@ trait Tree
      *
      * @return array
      */
-    public function toTree(string $query_mode = 'user_menu')
+    public function toTree(string $query_mode = self::MENU_MODE_USER)
     {
         return $this->buildNestedArray($query_mode);
     }
@@ -47,7 +47,7 @@ trait Tree
         return null;
     }
 
-    public function flatTree(string $query_mode = 'all_list', array $nodes = [])
+    public function flatTree(string $query_mode = self::MENU_MODE_ALL, array $nodes = [])
     {
         if (empty($nodes)) {
             $nodes = $this->toTree($query_mode);
@@ -83,7 +83,7 @@ trait Tree
         $branch = [];
 
         if (empty($nodes)) {
-            if($query_mode == 'all_list'){
+            if($query_mode == self::MENU_MODE_ALL){
                 $nodes = $this->allNodes();
             }else{
                 $nodes = $this->userNodes();

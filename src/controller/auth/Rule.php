@@ -3,8 +3,9 @@
 namespace tpadmin\controller\auth;
 
 use think\Request;
-use think\exception\ValidateException;
 use tpadmin\controller\Controller;
+use think\exception\ValidateException;
+
 use tpadmin\model\AuthRule as AuthRuleModel;
 
 class Rule extends Controller
