@@ -66,6 +66,23 @@ abstract class Controller extends ThinkController
         $this->view->assign(compact('menu_tree', 'current_adminer', 'current_ancestor_ids'));
     }
 
+    protected function filterSearchData($request, $search_fields)
+    {
+        $data = [];
+        foreach ($search_fields as $key => $field) {
+            if(!isset($field['param_name'])){
+                continue;
+            }
+            $param_name = $field['param_name'];
+            $value = $request->get($param_name);
+            if(is_null($value) || $value == ''){
+                continue;
+            }
+            $data[$param_name] = $value;
+        }
+        return $data;
+    }
+
     protected function filterPostData($request, $attrs)
     {
         $data = [];

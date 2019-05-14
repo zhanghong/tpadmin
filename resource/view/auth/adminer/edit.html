@@ -1,129 +1,142 @@
 {extend name="layout:base" /}
 {block name="main_content"}
-  <div class="page-content">
+<div class="page-content">
     <!--主题-->
     <?php if(!empty($current_page)): ?>
-      <div class="page-header">
+    <div class="page-header">
         <h1>
-          您当前操作
-          <small>
-            <i class="ace-icon fa fa-angle-double-right"></i>
-            {$current_page.title|default=''}
-          </small>
+            您当前操作
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                {$current_page.title|default=''}
+            </small>
         </h1>
-      </div>
+    </div>
     <?php endif; ?>
     <div class="row">
-      <div class="col-xs-12">
-        <form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.adminer.update]', ['id' => $adminer->id])}" >
-            <input type="hidden" name="_method" value="PUT">
-          <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">
-              登录账号<span class="red">*</span>
-            </label>
-            <div class="col-sm-10">
-              <input type="text" name="name" placeholder="请输入登录账号" class="col-xs-10 col-sm-5" value="" autocomplete="off" />
-            </div>
-          </div>
-          <div class="space-4"></div>
+        <div class="col-xs-12">
+            <form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.adminer.update]', ['id' => $adminer->id])}" >
+                <input type="hidden" name="_method" value="PUT">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">
+                        登录账号<span class="red">*</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" placeholder="请输入登录账号" class="col-xs-10 col-sm-5" value="{$adminer->name}" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="space-4"></div>
 
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">
-                登录密码：
-              </label>
-              <div class="col-sm-10">
-                <input type="password" name="password_hide"  style="display:none"/>
-                <input type="password" id="password" name="password" placeholder="请输入用户的登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
-              </div>
-            </div>
-            <div class="space-4"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">
+                        角色组
+                    </label>
+                    <div class="col-sm-10">
+                        <select name="role_id"  class="col-sm-5">
+                            <option value="0">请选择</option>
+                            {volist name="roles" id="vo"}
+                                <option value="{$vo.id}" <?php if($role_id==$vo['id']){ echo('selected="selected"'); } ?>>{$vo.title}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
 
-            <div class="form-group">
-              <label class="col-sm-2 control-label no-padding-right">
-                再次输入密码：
-              </label>
-              <div class="col-sm-10">
-                <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
-              </div>
-            </div>
-            <div class="space-4"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">
+                        登录密码：
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="password" id="password" name="password" placeholder="请输入用户的登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="space-4"></div>
 
-          <div class="clearfix form-actions">
-            <div class="col-md-offset-3 col-md-9">
-              <button class="btn btn-info" type="submit">
-                <i class="ace-icon fa fa-check bigger-110"></i>
-                保存
-              </button>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">
+                        确认密码：
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="space-4"></div>
 
-              &nbsp; &nbsp; &nbsp;
-              <button class="btn" type="reset">
-                <i class="ace-icon fa fa-undo bigger-110"></i>
-                重置
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="ace-icon fa fa-check bigger-110"></i>保存
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
 {/block}
-{block name="footer"}
-  <script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    var $form = $("form#model-form");
-    $form.validate({
-      rules:{
-        "name":{
-          required: true,
-          minlength: 3,
-          maxlength: 20
-        },"password":{
-          minlength: 6,
-          maxlength: 20
-        },"password_confirm":{
-          equalTo: "#password"
-        }
-      },
-      messages:{
-        "name":{
-          required: "用户名不能为空",
-          minlength: "用户名长度必须在3-20个字符之间",
-          maxlength: "用户名长度必须在3-20个字符之间"
-        },"password":{
-          minlength: "登录密码长度必须在6-20之间",
-          maxlength: "登录密码长度必须在6-20之间"
-        },"password_confirm":{
-          minlength: "登录密码长度必须在6-20之间",
-          maxlength: "登录密码长度必须在6-20之间",
-          equalTo: "两次输入的密码一致"
-        }
-      },
-      errorClass: "help-inline input-error",
-      errorElement: "span",
-      highlight:function(element, errorClass, validClass) {
-        $(element).parents('.form-group').addClass('has-error');
-      },
-      unhighlight: function(element, errorClass, validClass) {
-        $(element).parents('.form-group').removeClass('has-error');
-      },
-      submitHandler: function(form){
-        var $form = $(form);
-        $.ajax({
-          url: $form.attr("action"),
-          type: $form.attr("method"),
-          dataType: "JSON",
-          data: $form.serialize(),
-          success: function(data){
-            if(data.code){
-              location.href = data["url"];
-            }else{
-              alert(data["msg"]);
+{block name="page_js"}
+<script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $("form#model-form").validate({
+        rules:{
+            "name":{
+                required: true,
+                minlength: 3,
+                maxlength: 20
+            },"password":{
+                minlength: 6,
+                maxlength: 20
+            },"password_confirm":{
+                equalTo: "#password"
             }
-          }, error: function () {
-            alert("数据执行错误！");
-          }
-        });
-      }
+        },
+        messages:{
+            "name":{
+                required: "用户名不能为空",
+                minlength: "用户名长度必须在3-20个字符之间",
+                maxlength: "用户名长度必须在3-20个字符之间"
+            },"role_id":{
+                required: "角色组不能为空"
+            },"password":{
+                minlength: "登录密码长度必须在6-20之间",
+                maxlength: "登录密码长度必须在6-20之间"
+            },"password_confirm":{
+                minlength: "确认密码长度必须在6-20之间",
+                maxlength: "确认密码长度必须在6-20之间",
+                equalTo: "两次输入的密码一致"
+            }
+        },
+        errorClass: "help-inline input-error",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.form-group').addClass('has-error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.form-group').removeClass('has-error');
+        },
+        submitHandler: function(form){
+            var $form = $(form);
+            $.ajax({
+                url: $form.attr("action"),
+                type: $form.attr("method"),
+                dataType: "JSON",
+                data: $form.serialize(),
+                success: function(data){
+                    if(data.code){
+                        location.href = data["url"];
+                    }else{
+                        alert(data["msg"]);
+                    }
+                }, error: function () {
+                    alert("数据执行错误！");
+                }
+            });
+        }
     });
-  </script>
+</script>
 {/block}

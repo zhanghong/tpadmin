@@ -11,9 +11,11 @@ use tpadmin\model\AuthRole as AuthRoleModel;
 
 class Role extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $paginate = AuthRoleModel::paginateSelect();
+        $param_fields = AuthRoleModel::searchFields();
+        $params = $this->filterSearchData($request, $param_fields);
+        $paginate = AuthRoleModel::paginateSelect($params);
 
         return $this->fetch('auth/role/index', [
             'paginate' => $paginate,

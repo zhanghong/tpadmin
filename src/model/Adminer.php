@@ -19,6 +19,13 @@ class Adminer extends Model implements Authenticate
         return $this->belongsToMany('AuthRole', '\\tpadmin\\model\\AuthRoleUser', 'role_id', 'user_id');
     }
 
+    protected static function init()
+    {
+        self::afterDelete(function ($adminer) {
+            AuthRoleUser::where('user_id', $adminer->id)->delete();
+        });
+    }
+
     public function setPasswordAttr($value)
     {
         return password_hash($value, PASSWORD_DEFAULT);
@@ -44,27 +51,73 @@ class Adminer extends Model implements Authenticate
         return $this->find($identifier);
     }
 
+    static public function paginateSelect($params = [], $page_rows = 15)
+    {
+        $config = [];
+        $search_fields = self::searchFields();
+        $map = self::queryConditins($search_fields, $params);
+        $config = ['query' => $map];
+        $paginate = self::with('roles')->where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
+        return $paginate;
+    }
+
+    static public function searchFields()
+    {
+        return [
+            ['param_name' => 'keyword', 'column_name' => 'name', 'mode' => 'like'],
+        ];
+    }
+
     static public function createItem($data)
     {
         $validate = new ValidateCreate;
-        return $this->baesCreateItem($data, $validate);
+        $adminer = self::baesCreateItem($data, $validate);
+
+        $role_id = NULL;
+        if(isset($data['role_id'])){
+            $role_id = intval($data['role_id']);
+        }
+        return $adminer->updateRole($role_id);
     }
 
     static public function updateItem($id, $data)
     {
-        $adminer = self::find($id);
-        if(empty($adminer)){
-            return false;
+        if(empty($data['password'])){
+            unset($data['password']);
+            unset($data['password_confirm']);
+        }else if(empty($data['password_confirm'])){
+            $data['password_confirm'] = '1';
         }
 
-        return $adminer->updateInfo($data);
+        $validate = new ValidateUpdate;
+        $adminer = self::baesUpdateItem($id, $data, $validate);
+
+        $role_id = NULL;
+        if(isset($data['role_id'])){
+            $role_id = intval($data['role_id']);
+        }
+        return $adminer->updateRole($role_id);
     }
 
-    public function updateInfo($data)
+    private function updateRole($role_id)
     {
-        $data['id'] = $this->id;
-        $validate = new ValidateUpdate;
-        return $this->runUpdate($data, $validate);
+        if($this->is_default){
+            return true;
+        }else if(is_null($role_id)){
+            return true;
+        }else if($role_id == 0){
+            AuthRoleUser::where('user_id', $this->id)->delete();
+            return true;
+        }
+
+        $role_user = AuthRoleUser::where('user_id', $this->id)->find();
+        if(empty($role_user)){
+            AuthRoleUser::create(['user_id' => $this->id, 'role_id' => $role_id]);
+        }else if($role_user->role_id != $role_id){
+            $role_user->role_id = $role_id;
+            $role_user->save();
+        }
+        return true;
     }
 
     static public function deleteItem($id)
@@ -90,5 +143,14 @@ class Adminer extends Model implements Authenticate
             throw new \Exception('不能删除默认管理员');
         }
         return $this->delete();
+    }
+
+    public function getRoleTitlesAttr()
+    {
+        $titles = [];
+        foreach ($this->roles as $key => $role) {
+            array_push($titles, $role->title);
+        }
+        return implode(',', $titles);
     }
 }

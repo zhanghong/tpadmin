@@ -6,9 +6,19 @@ use tpadmin\validate\AuthRole as Validate;
 
 class AuthRole extends Model
 {
+    public function pivotRules()
+    {
+        return $this->hasMany('AuthRoleRule', 'role_id');
+    }
+
     public function rules()
     {
         return $this->belongsToMany('AuthRule', '\\tpadmin\\model\\AuthRoleRule', 'rule_id', 'role_id');
+    }
+
+    public function pivotUsers()
+    {
+        return $this->hasMany('AuthRoleUser', 'role_id');
     }
 
     public function users()
@@ -16,34 +26,52 @@ class AuthRole extends Model
         return $this->belongsToMany('Adminer', '\\tpadmin\\model\\AuthRoleUser', 'user_id', 'role_id');
     }
 
-    static public function paginateSelect($param = [], $page_rows = 15)
+    protected static function init()
     {
-        // $config = [];
+        self::afterDelete(function ($role) {
+            AuthRoleRule::where('role_id', $role->id)->delete();
+            AuthRoleUser::where('role_id', $role->id)->delete();
+        });
+    }
 
-        return self::paginate();
+    static public function paginateSelect($params = [], $page_rows = 15)
+    {
+        $config = [];
+        $search_fields = self::searchFields();
+        $map = self::queryConditins($search_fields, $params);
+        $config = ['query' => $map];
+        $paginate = self::where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
+        return $paginate;
+    }
+
+    static public function searchFields()
+    {
+        return [
+            ['param_name' => 'keyword', 'column_name' => 'title', 'mode' => 'like'],
+        ];
     }
 
     static public function createItem($data)
     {
+        $validate = new Validate;
+        $role = self::baesCreateItem($data, $validate);
+
         $rule_ids = [];
         if(isset($data['rule_ids'])){
             $rule_ids = $data['rule_ids'];
         }
-
-        $validate = new Validate;
-        $role = self::baesCreateItem($data, $validate);
         return $role->updateAllowRule($rule_ids);
     }
 
     static public function updateItem($id, $data)
     {
+        $validate = new Validate;
+        $role = self::baesUpdateItem($id, $data, $validate);
+
         $rule_ids = [];
         if(isset($data['rule_ids'])){
             $rule_ids = $data['rule_ids'];
         }
-
-        $validate = new Validate;
-        $role = self::baesUpdateItem($id, $data, $validate);
         return $role->updateAllowRule($rule_ids);
     }
 
@@ -78,4 +106,25 @@ class AuthRole extends Model
         $rule_ids = AuthRoleRule::where('role_id', $this->id)->column('rule_id');
         return $rule_ids;
     }
+
+    // static public function deleteItem($id)
+    // {
+    //     $id = intval($id);
+    //     if($id < 1){
+    //         return true;
+    //     }
+
+    //     $role = self::get($id, 'pivot_rules');
+    //     if(empty($role)){
+    //         return true;
+    //     }
+
+    //     return $role->runDelete();
+    // }
+
+    // public function runDelete()
+    // {
+    //     $this->together('pivot_rules')->delete();
+    //     return true;
+    // }
 }

@@ -40,10 +40,10 @@ class Passport extends Controller
     {
         try {
             $this->auth->login($request);
-            return redirect('tpadmin.index');
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
+        $this->success('登录成功', url('[tpadmin.index]'));
     }
 
     public function logout()

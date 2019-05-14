@@ -21,6 +21,13 @@ class AuthRule extends Model
         return $this->belongsToMany('AuthRole', '\\tpadmin\\model\\AuthRoleRule', 'role_id', 'rule_id');
     }
 
+    protected static function init()
+    {
+        self::afterDelete(function ($rule) {
+            AuthRoleRule::where('rule_id', $rule->id)->delete();
+        });
+    }
+
     static public function createItem($data)
     {
         $validate = new Validate;

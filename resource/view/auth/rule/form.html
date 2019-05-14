@@ -30,7 +30,7 @@
                             <option value="0">顶级菜单</option>
                             {volist name="parent_rules" id="vo"}
                                 <?php if($vo['depth'] < 2 && (!isset($rule['id']) || $vo['id'] != $rule['id'])): ?>
-                                    <option value="{$vo.id}"  <?php if(isset($rule['parent_id']) && $rule['parent_id']==$vo['id']){ echo('selected="selected"'); } ?>>{$vo.depth}{$vo.prefix}{$vo.title}</option>
+                                    <option value="{$vo.id}" <?php if(isset($rule['parent_id']) && $rule['parent_id']==$vo['id']){ echo('selected="selected"'); } ?>>{$vo.depth}{$vo.prefix}{$vo.title}</option>
                                 <?php endif; ?>
                             {/volist}
                         </select>

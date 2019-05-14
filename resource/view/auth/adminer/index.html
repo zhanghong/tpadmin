@@ -80,7 +80,7 @@
                                 <tr>
                                     <td>{$adminer->id}</td>
                                     <td>{$adminer->name}</td>
-                                    <td></td>
+                                    <td>{$adminer->role_titles}</td>
                                     <td>{$adminer->login_time|format_show_time=###}</td>
                                     <td>{$adminer->login_ip}</td>
                                     <td class="center">{$adminer->create_time}</td>
@@ -88,7 +88,7 @@
                                         <a class="green" href="{:url('[tpadmin.auth.adminer.edit]', ['id' => $adminer->id])}">
                                             <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                                         </a>
-                                        <a class="red" href="{:url('[tpadmin.auth.adminer.delete]', ['id' => $adminer->id])}">
+                                        <a class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[tpadmin.auth.adminer.delete]', ['id' => $adminer.id])}" data-del-id='{$adminer.id}'>
                                             <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                                         </a>
                                     </td>
@@ -105,31 +105,4 @@
         </div>
     </div>
 </div>
-{/block}
-
-{block name="footer"}
-<script type="text/javascript">
-    jQuery(function($){
-        $("form#delete-form").validate({
-            submitHandler: function(form){
-                var $form = $(form);
-                $.ajax({
-                    url: $form.attr("action"),
-                    type: $form.attr("method"),
-                    dataType: "JSON",
-                    data: $form.serialize(),
-                    success: function(data){
-                        if(data.code){
-                            location.href = data["url"];
-                        }else{
-                            alert(data["msg"]);
-                        }
-                    }, error: function () {
-                        alert("数据执行错误！");
-                    }
-                });
-            }
-        });
-    });
-</script>
 {/block}

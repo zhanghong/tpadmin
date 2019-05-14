@@ -32,6 +32,32 @@
                         </button>
                     </a>
                 </div>
+                <div class="col-xs-10 col-sm-5">
+                    <form name="form_search" class="form-search" method="get">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="ace-icon fa fa-check"></i>
+                            </span>
+                            <input type="text" name="keyword" id="keyword" class="form-control" value="{$param.keyword|default=''}" placeholder="请输入关键词" />
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-purple btn-sm">
+                                    <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                                    搜索
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-4 col-sm-5">
+                    <div class="input-group-btn">
+                        <a href="{:url('[tpadmin.auth.role.index]')}">
+                            <button type="button" class="btn btn-sm  btn-purple">
+                                <span class="ace-icon fa fa-globe icon-on-right bigger-110"></span>
+                                显示全部
+                            </button>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -75,31 +101,4 @@
         </div>
     </div>
 </div>
-{/block}
-
-{block name="footer"}
-<script type="text/javascript">
-    jQuery(function($){
-        $("form#delete-form").validate({
-            submitHandler: function(form){
-                var $form = $(form);
-                $.ajax({
-                    url: $form.attr("action"),
-                    type: $form.attr("method"),
-                    dataType: "JSON",
-                    data: $form.serialize(),
-                    success: function(data){
-                        if(data.code){
-                            location.href = data["url"];
-                        }else{
-                            alert(data["msg"]);
-                        }
-                    }, error: function () {
-                        alert("数据执行错误！");
-                    }
-                });
-            }
-        });
-    });
-</script>
 {/block}
