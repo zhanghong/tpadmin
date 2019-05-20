@@ -6,10 +6,10 @@
 
     }
   </script>
-
+  <?php $current_ancestor_ids = (!empty($current_rule) && !empty($current_rule['ancestor_ids'])) ? $current_rule['ancestor_ids'] : [] ?>
   <ul class="nav nav-list">
     {volist name="menu_tree" id="v"}
-      <li class="">
+      <li class="{$v|left_menu_item_class=$current_ancestor_ids,###}">
         <a href="{empty name='v.name'}#{else/}{:url($v['route_name'])}{/empty}" {notempty name="v.children"}class="dropdown-toggle"{/notempty} >
           <i class="{$v.icon|default=''}"></i>
           <span class="menu-text">
@@ -23,7 +23,7 @@
         {notempty name="v.children"}
           <ul class="submenu">
             {volist name="v.children" id="vv"}
-              <li class="">
+              <li class="{$vv|left_menu_item_class=$current_ancestor_ids,###}">
                 <a href="{:url($vv['route_name'])}">
                   <i class="{$vv.icon|default=''}"></i>
                   {$vv.title|default=''}

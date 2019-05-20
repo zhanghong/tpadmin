@@ -70,6 +70,28 @@ trait Tree
         return $branch;
     }
 
+    public function flatMenuTree($nodes)
+    {
+        if (empty($nodes)) {
+            return [];
+        }
+        $branch = [];
+
+        foreach ($nodes as $key => $value) {
+            $children = isset($value['children']) ? $value['children'] : [];
+            if ($children) {
+                unset($value['children']);
+            }
+
+            $branch[$value['name']] = $value;
+            if ($children) {
+                $branch = array_merge($branch, $this->flatMenuTree($children));
+            }
+        }
+
+        return $branch;
+    }
+
     /**
      * Build Nested array.
      *
@@ -78,7 +100,7 @@ trait Tree
      *
      * @return array
      */
-    protected function buildNestedArray(string $query_mode, array $nodes = [], $parentId = 0, $depth = 0)
+    protected function buildNestedArray(string $query_mode, array $nodes = [], $parentId = 0, $ancestor_ids = [])
     {
         $branch = [];
 
@@ -92,12 +114,15 @@ trait Tree
 
         foreach ($nodes as $node) {
             if ($node[$this->parentColumn] == $parentId) {
-                $children = $this->buildNestedArray($query_mode, $nodes, $node[$this->pk], $depth + 1);
+                $node['depth'] = count($ancestor_ids);
+                $node['ancestor_ids'] = $ancestor_ids;
+                array_push($node['ancestor_ids'], $node[$this->pk]);
 
+                $children = $this->buildNestedArray($query_mode, $nodes, $node[$this->pk], $node['ancestor_ids']);
                 if ($children) {
                     $node['children'] = $children;
                 }
-                $node['depth'] = $depth;
+
                 $branch[] = $node;
             }
         }

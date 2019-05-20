@@ -8,7 +8,7 @@ use think\Container;
 use think\facade\Config;
 use think\Controller as ThinkController;
 
-use tpadmin\model\AuthRule;
+use tpadmin\model\AuthRule as AuthRuleModel;
 use tpadmin\service\auth\facade\Auth;
 
 abstract class Controller extends ThinkController
@@ -59,11 +59,19 @@ abstract class Controller extends ThinkController
 
     public function assignCommon()
     {
-        $menu_tree = app(AuthRule::class)->toTree();
+        $route_app = app(AuthRuleModel::class);
+        $menu_tree = $route_app->toTree();
+        $flat_menu = $route_app->flatMenuTree($menu_tree);
+
+        $current_rule = NULL;
+        $current_route_name = current_request_route();
+        if(!empty($current_route_name) && isset($flat_menu[$current_route_name])){
+            $current_rule = $flat_menu[$current_route_name];
+        }
+
         $current_adminer = Auth::user();
         $this->current_adminer = $current_adminer;
-        $current_ancestor_ids = [];
-        $this->view->assign(compact('menu_tree', 'current_adminer', 'current_ancestor_ids'));
+        $this->view->assign(compact('menu_tree', 'current_rule', 'current_adminer'));
     }
 
     protected function filterSearchData($request, $search_fields)
