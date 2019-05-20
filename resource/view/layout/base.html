@@ -68,7 +68,10 @@
 
       <div class="main-content">
         <div class="main-content-inner">
-        {block name="main_content"}{/block}
+            <div class="page-content">
+                {include file="widget/_page_title" /}
+                {block name="main_content"}{/block}
+            </div>
         </div>
       </div><!-- /.main-content -->
 
