@@ -8,7 +8,7 @@ use think\exception\ValidateException;
 
 abstract class Model extends Base
 {
-    static protected function baesCreateItem(array $data, $validate = NULL)
+    protected static function baesCreateItem(array $data, $validate = NULL)
     {
         if (!empty($validate) && !$validate->check($data)) {
             throw new ValidateException($validate->getError());
@@ -18,7 +18,7 @@ abstract class Model extends Base
         return $item->reload();
     }
 
-    static protected function baesUpdateItem($id, array $data, $validate = NULL, $only_allow = true)
+    protected static function baesUpdateItem($id, array $data, $validate = NULL, $only_allow = true)
     {
         $id = intval($id);
         $item = self::find($id);
@@ -36,8 +36,7 @@ abstract class Model extends Base
             throw new ValidateException($validate->getError());
         }
 
-        $this->allowField($only_allow)->save($data, ['id' => $this->id]);
-        return $this->reload();
+        return $this->allowField($only_allow)->save($data, ['id' => $this->id]);
     }
 
     protected function reload()
@@ -45,8 +44,10 @@ abstract class Model extends Base
         return $this->find($this->id);
     }
 
-    static protected function queryConditins($search_fields, $params)
+    protected static function queryConditins($params)
     {
+        $search_fields = static::searchFields();
+
         $map = [];
         foreach ($search_fields as $key => $field) {
             $param_name = $field['param_name'];
@@ -92,5 +93,10 @@ abstract class Model extends Base
             }
         }
         return $map;
+    }
+
+    public static function searchFields()
+    {
+        return [];
     }
 }

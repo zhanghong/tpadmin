@@ -12,6 +12,10 @@ class Rule extends Controller
 {
     public function index()
     {
+        $menu_tree = app(AuthRuleModel::class)->toTree();
+        return json($menu_tree);
+        exit();
+
         $ruleModel = new AuthRuleModel;
         $list = $ruleModel->flatTree();
         return $this->fetch('auth/rule/index', [

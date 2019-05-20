@@ -42,10 +42,9 @@ Route::group([
     Route::get('/dashboard', 'Index@index');
 
     // 系统配置
-    Route::get('/config/edit', 'Config@edit')->name('tpadmin.config.edit');
-    Route::get('/config/update', 'Config@edit')->name('tpadmin.config.update');
+    Route::any('/config/site', 'Config@site')->name('tpadmin.config.site.edit');
 });
 
-// 首页
-Route::get('/', 'Index@index')->name('tpadmin.index');
-Route::get('/dashboard', 'Index@index');
+// // 首页
+// Route::get('/', 'Index@index')->name('tpadmin.index');
+// Route::get('/dashboard', 'Index@index');

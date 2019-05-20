@@ -51,24 +51,23 @@ class Adminer extends Model implements Authenticate
         return $this->find($identifier);
     }
 
-    static public function paginateSelect($params = [], $page_rows = 15)
+    public static function paginateSelect($params = [], $page_rows = 15)
     {
         $config = [];
-        $search_fields = self::searchFields();
-        $map = self::queryConditins($search_fields, $params);
+        $map = self::queryConditins($params);
         $config = ['query' => $map];
         $paginate = self::with('roles')->where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
         return $paginate;
     }
 
-    static public function searchFields()
+    public static function searchFields()
     {
         return [
             ['param_name' => 'keyword', 'column_name' => 'name', 'mode' => 'like'],
         ];
     }
 
-    static public function createItem($data)
+    public static function createItem($data)
     {
         $validate = new ValidateCreate;
         $adminer = self::baesCreateItem($data, $validate);
@@ -80,7 +79,7 @@ class Adminer extends Model implements Authenticate
         return $adminer->updateRole($role_id);
     }
 
-    static public function updateItem($id, $data)
+    public static function updateItem($id, $data)
     {
         if(empty($data['password'])){
             unset($data['password']);
@@ -120,7 +119,7 @@ class Adminer extends Model implements Authenticate
         return true;
     }
 
-    static public function deleteItem($id)
+    public static function deleteItem($id)
     {
         $current_adminer = Auth::user();
         if(empty($current_adminer)){

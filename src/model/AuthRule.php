@@ -28,13 +28,13 @@ class AuthRule extends Model
         });
     }
 
-    static public function createItem($data)
+    public static function createItem($data)
     {
         $validate = new Validate;
         return self::baesCreateItem($data, $validate);
     }
 
-    static public function updateItem($id, $data)
+    public static function updateItem($id, $data)
     {
         $validate = new Validate;
         return self::baesUpdateItem($id, $data, $validate);

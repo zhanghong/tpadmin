@@ -34,24 +34,23 @@ class AuthRole extends Model
         });
     }
 
-    static public function paginateSelect($params = [], $page_rows = 15)
+    public static function paginateSelect($params = [], $page_rows = 15)
     {
         $config = [];
-        $search_fields = self::searchFields();
-        $map = self::queryConditins($search_fields, $params);
+        $map = self::queryConditins($params);
         $config = ['query' => $map];
         $paginate = self::where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
         return $paginate;
     }
 
-    static public function searchFields()
+    public static function searchFields()
     {
         return [
             ['param_name' => 'keyword', 'column_name' => 'title', 'mode' => 'like'],
         ];
     }
 
-    static public function createItem($data)
+    public static function createItem($data)
     {
         $validate = new Validate;
         $role = self::baesCreateItem($data, $validate);
@@ -63,7 +62,7 @@ class AuthRole extends Model
         return $role->updateAllowRule($rule_ids);
     }
 
-    static public function updateItem($id, $data)
+    public static function updateItem($id, $data)
     {
         $validate = new Validate;
         $role = self::baesUpdateItem($id, $data, $validate);
@@ -107,7 +106,7 @@ class AuthRole extends Model
         return $rule_ids;
     }
 
-    // static public function deleteItem($id)
+    // public static function deleteItem($id)
     // {
     //     $id = intval($id);
     //     if($id < 1){
