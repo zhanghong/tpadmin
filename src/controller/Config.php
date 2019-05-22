@@ -3,6 +3,7 @@
 namespace tpadmin\controller;
 
 use think\Request;
+use think\facade\Session;
 use think\exception\ValidateException;
 
 use tpadmin\model\Config as ConfigModel;
@@ -36,7 +37,9 @@ class Config extends Controller
                 return json($error_msg);
                 $this->error($error_msg);
             }
-            return $this->success('更新成功');
+            $success_message = '更新成功';
+            Session::flash('success', $success_message);
+            return $this->success($success_message);
         }else{
             $config = ConfigModel::findOrCreateByName($name);
             $this->assign('settings', $config->settings);

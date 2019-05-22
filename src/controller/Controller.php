@@ -6,6 +6,7 @@ use think\Loader;
 use think\Console;
 use think\Container;
 use think\facade\Config;
+use think\facade\Session;
 use think\Controller as ThinkController;
 
 use tpadmin\model\AuthRule as AuthRuleModel;
@@ -71,7 +72,15 @@ abstract class Controller extends ThinkController
 
         $current_adminer = Auth::user();
         $this->current_adminer = $current_adminer;
-        $this->view->assign(compact('menu_tree', 'current_rule', 'current_adminer'));
+
+        $flash = [];
+        $flash_names = ['success', 'info', 'danger'];
+        foreach ($flash_names as $key => $name) {
+            if(Session::has($name)){
+                $flash[$name] = Session::get($name);
+            }
+        }
+        $this->view->assign(compact('menu_tree', 'current_rule', 'current_adminer', 'flash'));
     }
 
     protected function filterSearchData($request, $search_fields)

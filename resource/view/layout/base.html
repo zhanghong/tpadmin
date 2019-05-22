@@ -70,7 +70,12 @@
         <div class="main-content-inner">
             <div class="page-content">
                 {include file="widget/_page_title" /}
-                {block name="main_content"}{/block}
+                <div class="row">
+                    {include file="widget/_page_message" /}
+                    <div class="col-xs-12">
+                        {block name="main_content"}{/block}
+                    </div>
+                </div>
             </div>
         </div>
       </div><!-- /.main-content -->

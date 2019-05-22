@@ -3,6 +3,7 @@
 namespace tpadmin\controller\auth;
 
 use think\Request;
+use think\facade\Session;
 use tpadmin\controller\Controller;
 use think\exception\ValidateException;
 
@@ -41,7 +42,10 @@ class Adminer extends Controller
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
-        return $this->success('创建成功', url('[tpadmin.auth.adminer.index]'));
+
+        $success_message = '创建成功';
+        Session::flash('success', $success_message);
+        return $this->success($success_message, url('[tpadmin.auth.adminer.index]'));
     }
 
     public function edit(Request $request, $id)
@@ -72,7 +76,10 @@ class Adminer extends Controller
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
-        return $this->success('更新成功', url('[tpadmin.auth.adminer.index]'));
+
+        $success_message = '更新成功';
+        Session::flash('success', $success_message);
+        return $this->success($success_message, url('[tpadmin.auth.adminer.index]'));
     }
 
     public function delete(Request $request, $id)
@@ -84,11 +91,14 @@ class Adminer extends Controller
             return $this->error($e->getMessage());
         }
 
-        return $this->success('删除成功');
+        $success_message = '删除成功';
+        Session::flash('success', $success_message);
+        return $this->success($success_message);
     }
 
     public function read(Request $request, $id)
     {
+        Session::flash('info', '您访问的页面不存在');
         $this->redirect('[tpadmin.auth.adminer.index]');
     }
 

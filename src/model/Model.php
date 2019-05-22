@@ -36,7 +36,8 @@ abstract class Model extends Base
             throw new ValidateException($validate->getError());
         }
 
-        return $this->allowField($only_allow)->save($data, ['id' => $this->id]);
+        $this->allowField($only_allow)->save($data, ['id' => $this->id]);
+        return $this;
     }
 
     protected function reload()

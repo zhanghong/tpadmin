@@ -1,71 +1,65 @@
 {extend name="layout:base" /}
 {block name="main_content"}
-<div class="page-content">
-    <div class="row">
-        <div class="col-xs-12">
-            <form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.adminer.update]', ['id' => $adminer->id])}" >
-                <input type="hidden" name="_method" value="PUT">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right">
-                        登录账号<span class="red">*</span>
-                    </label>
-                    <div class="col-sm-10">
-                        <input type="text" name="name" placeholder="请输入登录账号" class="col-xs-10 col-sm-5" value="{$adminer->name}" autocomplete="off" />
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right">
-                        角色组
-                    </label>
-                    <div class="col-sm-10">
-                        <select name="role_id"  class="col-sm-5">
-                            <option value="0">请选择</option>
-                            {volist name="roles" id="vo"}
-                                <option value="{$vo.id}" <?php if($role_id==$vo['id']){ echo('selected="selected"'); } ?>>{$vo.title}</option>
-                            {/volist}
-                        </select>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right">
-                        登录密码：
-                    </label>
-                    <div class="col-sm-10">
-                        <input type="password" id="password" name="password" placeholder="请输入用户的登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right">
-                        确认密码：
-                    </label>
-                    <div class="col-sm-10">
-                        <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="clearfix form-actions">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-info" type="submit">
-                            <i class="ace-icon fa fa-check bigger-110"></i>保存
-                        </button>
-
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>重置
-                        </button>
-                    </div>
-                </div>
-            </form>
+<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.adminer.update]', ['id' => $adminer->id])}" >
+    <input type="hidden" name="_method" value="PUT">
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right">
+            登录账号<span class="red">*</span>
+        </label>
+        <div class="col-sm-10">
+            <input type="text" name="name" placeholder="请输入登录账号" class="col-xs-10 col-sm-5" value="{$adminer->name}" autocomplete="off" />
         </div>
     </div>
-</div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right">
+            角色组
+        </label>
+        <div class="col-sm-10">
+            <select name="role_id"  class="col-sm-5">
+                <option value="0">请选择</option>
+                {volist name="roles" id="vo"}
+                    <option value="{$vo.id}" <?php if($role_id==$vo['id']){ echo('selected="selected"'); } ?>>{$vo.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right">
+            登录密码：
+        </label>
+        <div class="col-sm-10">
+            <input type="password" id="password" name="password" placeholder="请输入用户的登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right">
+            确认密码：
+        </label>
+        <div class="col-sm-10">
+            <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入登录密码" class="col-xs-10 col-sm-5" value="" autocomplete="off"/>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="ace-icon fa fa-check bigger-110"></i>保存
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="reset">
+                <i class="ace-icon fa fa-undo bigger-110"></i>重置
+            </button>
+        </div>
+    </div>
+</form>
 {/block}
 {block name="page_js"}
 <script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
