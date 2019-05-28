@@ -1,6 +1,6 @@
 {extend name="layout:base" /}
 {block name="main_content"}
-<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.adminer.update]', ['id' => $adminer->id])}" >
+<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[admin.auth.adminer.update]', ['id' => $adminer->id])}" >
     <input type="hidden" name="_method" value="PUT">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right">

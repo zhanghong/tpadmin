@@ -3,7 +3,7 @@
 
 <div class="row maintop">
     <div class="col-xs-4 col-sm-2">
-        <a href="{:url('[tpadmin.auth.role.create]')}">
+        <a href="{:url('[admin.auth.role.create]')}">
             <button class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus bigger-110"></i>添加角色组
             </button>
@@ -27,7 +27,7 @@
     </div>
     <div class="col-xs-4 col-sm-5">
         <div class="input-group-btn">
-            <a href="{:url('[tpadmin.auth.role.index]')}">
+            <a href="{:url('[admin.auth.role.index]')}">
                 <button type="button" class="btn btn-sm  btn-purple">
                     <span class="ace-icon fa fa-globe icon-on-right bigger-110"></span>
                     显示全部
@@ -58,10 +58,10 @@
                         <td>{$role->create_time}</td>
                         <td>{$role->update_time}</td>
                         <td class="center">
-                            <a class="green" href="{:url('[tpadmin.auth.role.edit]', ['id' => $role->id])}">
+                            <a class="green" href="{:url('[admin.auth.role.edit]', ['id' => $role->id])}">
                                 <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                             </a>
-                            <a class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[tpadmin.auth.role.delete]', ['id' => $role.id])}" data-del-id='{$role.id}'>
+                            <a class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[admin.auth.role.delete]', ['id' => $role.id])}" data-del-id='{$role.id}'>
                                 <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                             </a>
                         </td>

@@ -1,10 +1,10 @@
 {extend name="layout:base" /}
 {block name="main_content"}
 <?php if(isset($role['id'])): ?>
-<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.role.edit]', ['id' => $role.id])}">
+<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[admin.auth.role.edit]', ['id' => $role.id])}">
     <input type="hidden" name="_method" value="PUT">
 <?php else: ?>
-<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[tpadmin.auth.role.save]')}">
+<form class="form-horizontal adminform" id="model-form" method="post" action="{:url('[admin.auth.role.save]')}">
 <?php endif; ?>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">

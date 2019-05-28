@@ -20,7 +20,7 @@ class Boot
      *
      * @var string
      */
-    protected $name = 'tpadmin';
+    protected $name = 'admin';
 
     /**
      * 控制器命名空间.
@@ -37,21 +37,21 @@ class Boot
     public function run(App $app)
     {
         // $this->loadHelper();
-        $this->loadConfig();
+        // $this->loadConfig();
         $this->importMiddleware();
         $this->bindProviders();
-        $this->bootRoute();
+        // $this->bootRoute();
 
         $this->initConsole();
     }
 
-    // protected function loadHelper()
-    // {
-    //     // 加载公共文件
-    //     if (is_file(dirname(dirname(__DIR__)) . '/helper.php')) {
-    //         include_once dirname(dirname(__DIR__)) . '/helper.php';
-    //     }
-    // }
+    protected function loadHelper()
+    {
+        // 加载公共文件
+        if (is_file(dirname(dirname(__DIR__)) . '/helper.php')) {
+            include_once dirname(dirname(__DIR__)) . '/helper.php';
+        }
+    }
 
     protected function loadConfig()
     {
@@ -108,7 +108,7 @@ class Boot
             if (strpos($file, '.php')) {
                 $filename = $routePath.$file;
                 // 导入路由配置
-                Route::group($this->name, function () use ($filename) {
+                $this->app->route->group($this->name, function () use ($filename) {
                     $rules = include_once $filename;
                     if (\is_array($rules)) {
                         $this->app->route->import($rules);

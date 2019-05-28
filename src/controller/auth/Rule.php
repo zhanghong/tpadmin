@@ -52,14 +52,14 @@ class Rule extends Controller
 
         $success_message = '创建成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.rule.index]'));
+        return $this->success($success_message, url('[admin.auth.rule.index]'));
     }
 
     public function edit(Request $request, $id)
     {
         $rule = AuthRuleModel::find($id);
         if(empty($rule)){
-            $this->redirect('[tpadmin.auth.rule.index]');
+            $this->redirect('[admin.auth.rule.index]');
         }
         $this->assign('rule', $rule);
 
@@ -90,13 +90,13 @@ class Rule extends Controller
 
         $success_message = '更新成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.rule.index]'));
+        return $this->success($success_message, url('[admin.auth.rule.index]'));
     }
 
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[tpadmin.auth.rule.index]');
+        $this->redirect('[admin.auth.rule.index]');
     }
 
     public function delete(Request $request, $id)
@@ -115,7 +115,7 @@ class Rule extends Controller
 
         $success_message = '删除成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.rule.index]'));
+        return $this->success($success_message, url('[admin.auth.rule.index]'));
     }
 
     private function getPostData($request)

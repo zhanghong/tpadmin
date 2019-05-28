@@ -2,7 +2,7 @@
 {block name="main_content"}
 <div class="row maintop">
     <div class="col-xs-4 col-sm-2">
-        <a href="{:url('[tpadmin.auth.adminer.create]')}">
+        <a href="{:url('[admin.auth.adminer.create]')}">
             <button class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus bigger-110"></i>添加管理员
             </button>
@@ -26,7 +26,7 @@
     </div>
     <div class="col-xs-4 col-sm-5">
         <div class="input-group-btn">
-            <a href="{:url('[tpadmin.auth.adminer.index]')}">
+            <a href="{:url('[admin.auth.adminer.index]')}">
                 <button type="button" class="btn btn-sm  btn-purple">
                     <span class="ace-icon fa fa-globe icon-on-right bigger-110"></span>
                     显示全部
@@ -61,10 +61,10 @@
                         <td>{$adminer->login_ip}</td>
                         <td class="center">{$adminer->create_time}</td>
                         <td class="center">
-                            <a class="green" href="{:url('[tpadmin.auth.adminer.edit]', ['id' => $adminer->id])}">
+                            <a class="green" href="{:url('[admin.auth.adminer.edit]', ['id' => $adminer->id])}">
                                 <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                             </a>
-                            <a class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[tpadmin.auth.adminer.delete]', ['id' => $adminer.id])}" data-del-id='{$adminer.id}'>
+                            <a class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[admin.auth.adminer.delete]', ['id' => $adminer.id])}" data-del-id='{$adminer.id}'>
                                 <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                             </a>
                         </td>

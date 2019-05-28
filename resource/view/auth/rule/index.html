@@ -2,7 +2,7 @@
 {block name="main_content"}
 <div class="row maintop">
     <div class="col-xs-4 col-sm-2">
-        <a href="{:url('[tpadmin.auth.rule.create]')}">
+        <a href="{:url('[admin.auth.rule.create]')}">
             <button class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus bigger-110"></i>添加菜单项
             </button>
@@ -36,10 +36,10 @@
                             <input type="text" maxlength="4" name="items[{$rule.id}]" value="{$rule.sort_num}" class="field-style">
                         </td>
                         <td class="center">
-                            <a class="green" href="{:url('[tpadmin.auth.rule.edit]', ['id' => $rule.id])}">
+                            <a class="green" href="{:url('[admin.auth.rule.edit]', ['id' => $rule.id])}">
                                 <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                             </a>
-                            <a id='del-{$rule.id}' class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[tpadmin.auth.rule.delete]', ['id' => $rule.id])}" data-del-id='{$rule.id}'>
+                            <a id='del-{$rule.id}' class="red" herf="javascript:void(0);" onclick="alert_del(this);" data-del-href="{:url('[admin.auth.rule.delete]', ['id' => $rule.id])}" data-del-id='{$rule.id}'>
                                 <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                             </a>
                         </td>

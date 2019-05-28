@@ -45,7 +45,7 @@ class Adminer extends Controller
 
         $success_message = '创建成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.adminer.index]'));
+        return $this->success($success_message, url('[admin.auth.adminer.index]'));
     }
 
     public function edit(Request $request, $id)
@@ -79,7 +79,7 @@ class Adminer extends Controller
 
         $success_message = '更新成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.adminer.index]'));
+        return $this->success($success_message, url('[admin.auth.adminer.index]'));
     }
 
     public function delete(Request $request, $id)
@@ -99,7 +99,7 @@ class Adminer extends Controller
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[tpadmin.auth.adminer.index]');
+        $this->redirect('[admin.auth.adminer.index]');
     }
 
     private function getPostData($request)

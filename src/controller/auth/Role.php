@@ -57,14 +57,14 @@ class Role extends Controller
 
         $success_message = '创建成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.role.index]'));
+        return $this->success($success_message, url('[admin.auth.role.index]'));
     }
 
     public function edit(Request $request, $id)
     {
         $role = AuthRoleModel::find($id);
         if(empty($role)){
-            $this->redirect('[tpadmin.auth.role.index]');
+            $this->redirect('[admin.auth.role.index]');
         }
         $this->assign('role', $role);
         $this->assign('rule_ids', $role->allowRoleIds());
@@ -96,13 +96,13 @@ class Role extends Controller
 
         $success_message = '更新成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.role.index]'));
+        return $this->success($success_message, url('[admin.auth.role.index]'));
     }
 
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[tpadmin.auth.role.index]');
+        $this->redirect('[admin.auth.role.index]');
     }
 
     public function delete(Request $request, $id)
@@ -121,7 +121,7 @@ class Role extends Controller
 
         $success_message = '删除成功';
         Session::flash('success', $success_message);
-        return $this->success($success_message, url('[tpadmin.auth.role.index]'));
+        return $this->success($success_message, url('[admin.auth.role.index]'));
     }
 
     private function getPostData($request)

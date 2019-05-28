@@ -162,3 +162,16 @@ if (!function_exists('format_show_time')) {
         }
     }
 }
+
+\think\Console::addDefaultCommands([
+    'tpadmin:init' => \tpadmin\command\Init::class,
+    'tpadmin:seed' => \tpadmin\command\Seed::class,
+]);
+
+// Route::group('admin/auth', function () {
+//     Route::get('passport/login', '\\tpadmin\\Config@login')->name('admin.auth.passport.login');
+//     Route::post('passport/login', 'tpadmin\\Passport@loginAuth')->name('admin.auth.passport.dologin');
+
+//     // Route::get('/admin/passport/logout', '\\tpadmin\\auth\\Passport@logout')->name('admin.auth.passport.logout')->middleware('tpadmin.admin');
+//     // Route::get('/admin/passport/user', '\\tpadmin\\auth\\Passport@user')->name('admin.auth.passport.user')->middleware('tpadmin.admin');
+// });
