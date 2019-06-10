@@ -42,8 +42,8 @@
                                     </label>
                                     <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                            <input type="text" class="tpl-form-input" id="captcha" name="captcha"  placeholder="验证码" required style="width: 60%;float: left;">
-                                            <img id='img_captcha' src="{:captcha_src()}" alt="captcha" id="user-code-img" style="width: 40%;height: 32px;float: left;" onclick="this.src=this.src+'?t='+Math.random()" />
+                                            <input type="text" class="form-control" id="captcha" name="captcha"  placeholder="验证码" required style="width: 60%;float: left;">
+                                            <img id='img_captcha' src="{:captcha_src()}" alt="captcha" id="user-code-img" style="width: 40%;height: 34px;float: left;" onclick="this.src=this.src+'?t='+Math.random()" />
                                         </span>
                                     </label>
 
@@ -69,6 +69,7 @@
 {/block}
 {block name="footer"}
 <script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
+<script src="__TPADMIN_ASSETS__/plugins/jquery-validate/ace.validate.js"></script>
 <script type="text/javascript">
 $("form").validate({
     rules:{

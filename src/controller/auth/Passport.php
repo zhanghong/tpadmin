@@ -68,6 +68,6 @@ class Passport extends Controller
     public function logout()
     {
         $this->auth->logout();
-        return redirect('[tpadmin.auth.passport.login]');
+        return redirect('[admin.auth.passport.login]');
     }
 }
