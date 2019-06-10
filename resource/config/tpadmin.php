@@ -8,7 +8,7 @@
 return [
     'template' => [
         // 视图目录
-        'view_path' => admin_view_path(),
+        'view_path' => 'admin/view/',
         // public目录名
         'public_name' => 'public',
         'tpl_replace_string' => [

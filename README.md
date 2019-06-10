@@ -10,26 +10,43 @@
   </a>
 </p>
 
-## Installing
+## 安装
+最方便的安装方式就是使用Composer ( https://getcomposer.org/ )，在这之前**务必**先搭建好thinkphp5.1项目
 
+1、安装 Tpadmin :
 ```shell
-$ composer require zhanghong/tpadmin -vvv
+$ composer require zhanghong/tpadmin
 ```
 
-## Usage
+2、配置
 
-TODO
+添加行为在 `application/tags.php`
 
-## Contributing
+```
+return [
 
-You can contribute in one of three ways:
+    'app_init'     => [
+        \tpadmin\behavior\Boot::class,
+    ],
 
-1. File bug reports using the [issue tracker](https://github.com/zhanghong/tpadmin/issues).
-2. Answer questions or fix bugs on the [issue tracker](https://github.com/zhanghong/tpadmin/issues).
-3. Contribute new features or update the wiki.
+    // ...
+];
+```
 
-_The code contribution process is not very formal. You just need to make sure that you follow the PSR-0, PSR-1, and PSR-2 coding guidelines. Any new code contributions must be accompanied by unit tests where applicable._
+3、初始化和数据迁移
+```shell
+#初始化
+$ php think tpadmin:init
+#安装数据库迁移扩展包
+$ composer require topthink/think-migration=2.0.*
+#创建Tpadmin数据表
+$ php think migrate:run
+#添加初始化数据
+$ php think tpadmin:seed
+```
 
-## License
+## 进入tpadmin后台
 
-MIT
+打开后台地址，例如：
+
+http://yourdomain/admin

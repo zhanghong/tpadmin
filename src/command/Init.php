@@ -32,7 +32,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @return   [type]             [description]
      */
-    protected function publishAssets()
+    private function publishAssets()
     {
         $assets = ltrim(config('tpadmin.template.tpl_replace_string.__TPADMIN_ASSETS__'), '/');
         $publicName = trim(config('tpadmin.template.public_name'), '/');
@@ -58,7 +58,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @return   [type]             [description]
      */
-    protected function publishConfig()
+    private function publishConfig()
     {
         $source = new Filesystem(
             new Local(__DIR__.'/../../resource/config')
@@ -76,7 +76,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @return   [type]             [description]
      */
-    protected function publishRoute()
+    private function publishRoute()
     {
         $source = new Filesystem(
             new Local(__DIR__.'/../../resource/route')
@@ -94,7 +94,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @return   [type]             [description]
      */
-    protected function publishMigrations()
+    private function publishMigrations()
     {
         $source = new Filesystem(
             new Local(__DIR__.'/../../resource/migrations')
@@ -112,7 +112,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @return   [type]             [description]
      */
-    protected function publishAdminView()
+    private function publishAdminView()
     {
         $source = new Filesystem(
             new Local(__DIR__.'/../../resource/view')
