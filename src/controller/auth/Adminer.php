@@ -5,7 +5,7 @@ namespace tpadmin\controller\auth;
 use think\Request;
 use think\facade\Session;
 use tpadmin\controller\Controller;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 
 use tpadmin\model\Adminer as AdminerModel;
 use tpadmin\model\AuthRole as AuthRoleModel;
@@ -37,9 +37,9 @@ class Adminer extends Controller
         $data = $this->getPostData($request);
         try {
             $adminer = AdminerModel::createItem($data);
-        } catch (ValidateException $e) {
-            $this->error($e->getError());
-        } catch (\Exception $e) {
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
             $this->error($e->getMessage());
         }
 
@@ -71,9 +71,9 @@ class Adminer extends Controller
         $data = $this->getPostData($request);
         try {
             $adminer = AdminerModel::updateItem($id, $data);
-        } catch (ValidateException $e) {
-            $this->error($e->getError());
-        } catch (\Exception $e) {
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
             $this->error($e->getMessage());
         }
 

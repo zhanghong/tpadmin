@@ -5,7 +5,7 @@ namespace tpadmin\controller\auth;
 use think\Request;
 use think\facade\Session;
 use tpadmin\controller\Controller;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 
 use tpadmin\model\AuthRule as AuthRuleModel;
 use tpadmin\model\AuthRole as AuthRoleModel;
@@ -44,15 +44,10 @@ class Role extends Controller
 
         try{
             $rule = AuthRoleModel::createItem($data);
-        } catch (ValidateException $e) {
-            $error_msg = $e->getError();
-        } catch (\Exception $e) {
-            $error_msg = $e->getError();
-        }
-
-        if(!is_null($error_msg)){
-            return json(['msg' => $error_msg]);
-            $this->error($error_msg);
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
+            $this->error($e->getMessage());
         }
 
         $success_message = '创建成功';
@@ -85,13 +80,9 @@ class Role extends Controller
         try{
             $role = AuthRoleModel::updateItem($id, $data);
         } catch (ValidateException $e) {
-            $error_msg = $e->getError();
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         } catch (\Exception $e) {
-            $error_msg = $e->getError();
-        }
-
-        if(!is_null($error_msg)){
-            $this->error($error_msg);
+            $this->error($e->getError());
         }
 
         $success_message = '更新成功';

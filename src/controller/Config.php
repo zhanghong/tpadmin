@@ -4,7 +4,7 @@ namespace tpadmin\controller;
 
 use think\Request;
 use think\facade\Session;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 
 use tpadmin\model\Config as ConfigModel;
 
@@ -27,16 +27,12 @@ class Config extends Controller
             $settings = $this->filterPostData($request, $filter_attrs);
             try{
                 $config = ConfigModel::createOrUpdateByName($name, $settings);
-            } catch (ValidateException $e) {
-                $error_msg = $e->getError();
-            } catch (\Exception $e) {
-                $error_msg = $e->getError();
+            }catch (ValidateException $e){
+                $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            }catch (\Exception $e){
+                $this->error($e->getMessage());
             }
 
-            if(!is_null($error_msg)){
-                return json($error_msg);
-                $this->error($error_msg);
-            }
             $success_message = '更新成功';
             Session::flash('success', $success_message);
             return $this->success($success_message);

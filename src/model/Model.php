@@ -4,14 +4,16 @@ namespace tpadmin\model;
 
 use Db;
 use think\Model as Base;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 
 abstract class Model extends Base
 {
     protected static function baesCreateItem(array $data, $validate = NULL)
     {
-        if (!empty($validate) && !$validate->check($data)) {
-            throw new ValidateException($validate->getError());
+        if (!empty($validate) && !$validate->batch(true)->check($data)) {
+            $e = new ValidateException('数据验证失败');
+            $e->setData($validate->getError());
+            throw $e;
         }
 
         $item = self::create($data);
@@ -32,8 +34,10 @@ abstract class Model extends Base
 
     protected function runUpdate($data, $validate = NULL, $only_allow = true)
     {
-        if (!empty($validate) && !$validate->check($data)) {
-            throw new ValidateException($validate->getError());
+        if (!empty($validate) && !$validate->batch(true)->check($data)) {
+            $e = new ValidateException('数据验证失败');
+            $e->setData($validate->getError());
+            throw $e;
         }
 
         $this->allowField($only_allow)->save($data, ['id' => $this->id]);
@@ -45,7 +49,7 @@ abstract class Model extends Base
         return $this->find($this->id);
     }
 
-    protected static function queryConditins($params)
+    protected static function queryConditions($params)
     {
         $search_fields = static::searchFields();
 

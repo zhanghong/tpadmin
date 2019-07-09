@@ -6,6 +6,7 @@ use tpadmin\service\auth\contract\Auth;
 use tpadmin\controller\Controller;
 use think\Request;
 use think\facade\Route;
+use tpadmin\exception\ValidateException;
 
 class Passport extends Controller
 {
@@ -34,24 +35,6 @@ class Passport extends Controller
 
     public function login()
     {
-        // $routePath = admin_route_path();
-        // $files = scandir($routePath);
-        // foreach ($files as $file) {
-        //     if (strpos($file, '.php')) {
-        //         $filename = $routePath.$file;
-        //         $rules = include_once $filename;
-        //         var_dump($rules);
-        //         // 导入路由配置
-        //         // Route::group('admin', function () use ($filename) {
-        //         //     $rules = include_once $filename;
-        //         //     var_dump($rules);
-        //         //     // if (\is_array($rules)) {
-        //         //     //     $this->app->route->import($rules);
-        //         //     // }
-        //         // })->prefix('admin');
-        //     }
-        // }
-        // exit();
         return $this->fetch('auth/passport/login');
     }
 
@@ -59,7 +42,9 @@ class Passport extends Controller
     {
         try {
             $this->auth->login($request);
-        } catch (\Exception $e) {
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
             $this->error($e->getMessage());
         }
         $this->success('登录成功', url('[admin.index]'));

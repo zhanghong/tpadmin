@@ -97,7 +97,7 @@ class Seed extends Command
         }
 
         // 默认管理员群组
-        $default_role_data = ['title' => '管理员', 'status' => 1];
+        $default_role_data = ['title' => '超级管理员', 'status' => 1];
         $auth_role = AuthRole::where('title', $default_role_data['title'])->find();
         if(empty($auth_role)){
             $auth_role = AuthRole::create($default_role_data);

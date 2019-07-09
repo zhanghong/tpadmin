@@ -5,7 +5,7 @@ namespace tpadmin\controller\auth;
 use think\Request;
 use think\facade\Session;
 use tpadmin\controller\Controller;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 
 use tpadmin\model\AuthRule as AuthRuleModel;
 
@@ -40,14 +40,10 @@ class Rule extends Controller
 
         try{
             $rule = AuthRuleModel::createItem($data);
-        } catch (ValidateException $e) {
-            $error_msg = $e->getError();
-        } catch (\Exception $e) {
-            $error_msg = $e->getError();
-        }
-
-        if(!is_null($error_msg)){
-            $this->error($error_msg);
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
+            $this->error($e->getMessage());
         }
 
         $success_message = '创建成功';
@@ -78,14 +74,10 @@ class Rule extends Controller
 
         try{
             $rule = AuthRuleModel::updateItem($id, $data);
-        } catch (ValidateException $e) {
-            $error_msg = $e->getError();
-        } catch (\Exception $e) {
-            $error_msg = $e->getError();
-        }
-
-        if(!is_null($error_msg)){
-            $this->error($error_msg);
+        }catch (ValidateException $e){
+            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+        }catch (\Exception $e){
+            $this->error($e->getMessage());
         }
 
         $success_message = '更新成功';
@@ -116,6 +108,13 @@ class Rule extends Controller
         $success_message = '删除成功';
         Session::flash('success', $success_message);
         return $this->success($success_message, url('[admin.auth.rule.index]'));
+    }
+
+    public function resort(Request $request)
+    {
+        $items = $request->post('items');
+        AuthRuleModel::resort($items);
+        $this->redirect('[admin.auth.rule.index]');
     }
 
     private function getPostData($request)

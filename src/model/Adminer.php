@@ -54,7 +54,7 @@ class Adminer extends Model implements Authenticate
     public static function paginateSelect($params = [], $page_rows = 15)
     {
         $config = [];
-        $map = self::queryConditins($params);
+        $map = self::queryConditions($params);
         $config = ['query' => $map];
         $paginate = self::with('roles')->where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
         return $paginate;

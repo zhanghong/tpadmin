@@ -4,7 +4,7 @@ namespace tpadmin\service\auth;
 
 use tpadmin\service\auth\contract\Authenticate;
 use tpadmin\service\auth\guard\contract\Guard;
-use think\exception\ValidateException;
+use tpadmin\exception\ValidateException;
 use think\facade\Validate;
 use think\Request;
 
@@ -29,7 +29,9 @@ class Auth implements contract\Auth
         $this->validate($request->param());
 
         if (!$this->attempt($request->param())) {
-            throw new ValidateException('用户名或密码错误');
+            $e = new ValidateException('数据验证失败');
+            $e->setData(['admin_account' => '用户名或密码错误']);
+            throw $e;
         }
 
         $this->guard()->login($this->adminer);
@@ -63,9 +65,11 @@ class Auth implements contract\Auth
             'admin_password.max' => '密码最多不能超过25个字符',
         ]);
 
-        if (!$validate->check($data)) {
+        if (!$validate->batch(true)->check($data)) {
             if ($this->failException) {
-                throw new ValidateException($validate->getError());
+                $e = new ValidateException('数据验证失败');
+                $e->setData($validate->getError());
+                throw $e;
             }
         }
     }
