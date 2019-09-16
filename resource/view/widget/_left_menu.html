@@ -10,8 +10,8 @@
   <ul class="nav nav-list">
     {volist name="menu_tree" id="v"}
       <li class="{$v|left_menu_item_class=$current_ancestor_ids,###}">
-        <a href="{empty name='v.name'}#{else/}{:url($v['route_name'])}{/empty}" {notempty name="v.children"}class="dropdown-toggle"{/notempty} >
-          <i class="{$v.icon|default=''}"></i>
+        <a href="{empty name='v.route_name'}#{else/}{:url('['.$v['route_name'].']')}{/empty}" {notempty name="v.children"}class="dropdown-toggle"{/notempty} >
+          <i class="{$v.icon}"></i>
           <span class="menu-text">
             {$v.title|default=''}
           </span>
@@ -24,7 +24,7 @@
           <ul class="submenu">
             {volist name="v.children" id="vv"}
               <li class="{$vv|left_menu_item_class=$current_ancestor_ids,###}">
-                <a href="{:url($vv['route_name'])}">
+                <a href="{:url('['.$vv['route_name'].']')}">
                   <i class="{$vv.icon|default=''}"></i>
                   {$vv.title|default=''}
                 </a>

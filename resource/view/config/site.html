@@ -78,47 +78,24 @@
 {block name="page_js"}
 <script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript">
-    $("form#model-form").validate({
-        rules:{
-            "title":{
-                required: true,
-                minlength: 2,
-                maxlength: 10
-            }
-        },
-        messages:{
-            "title":{
-                required: "站点名称不能为空",
-                minlength: "站点名称不能少于2个字符",
-                maxlength: "站点名称不能超过10个字符"
-            }
-        },
-        errorClass: "help-inline input-error",
-        errorElement: "span",
-        highlight:function(element, errorClass, validClass) {
-            $(element).parents('.block').addClass('has-error');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).parents('.block').removeClass('has-error');
-        },
-        submitHandler: function(form){
-            var $form = $(form);
-            $.ajax({
-                url: $form.attr("action"),
-                type: $form.attr("method"),
-                dataType: "JSON",
-                data: $form.serialize(),
-                success: function(data){
-                    if(data.code){
-                        location.href = data["url"];
-                    }else{
-                        alert(data["msg"]);
-                    }
-                }, error: function () {
-                    alert("数据执行错误！");
+    jQuery(function($){
+        validAndSubmitForm(
+            "form#model-form",
+            {
+                "title":{
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
                 }
-            });
-        }
+            },
+            {
+                "title":{
+                    required: "站点名称不能为空",
+                    minlength: "站点名称不能少于2个字符",
+                    maxlength: "站点名称不能超过10个字符"
+                }
+            }
+        );
     });
 </script>
 {/block}

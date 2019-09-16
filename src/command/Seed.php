@@ -54,12 +54,14 @@ class Seed extends Command
     protected function createMenus()
     {
         $auth_rules = [
-            ['name' => 'index/index', 'title' => '控制台', 'route_name' => 'admin.index', 'icon' => 'am-icon-home', 'parent_name' => ''],
+            ['name' => 'index/index', 'title' => '控制台', 'route_name' => 'admin.index', 'icon' => 'fa fa-tachometer', 'parent_name' => ''],
 
-            ['name' => 'setting/manager', 'title' => '常规管理', 'route_name' => '', 'icon' => 'am-icon-cog', 'parent_name' => ''],
-            ['name' => 'config/site', 'title' => '系统设置', 'route_name' => 'admin.config.site', 'icon' => '', 'parent_name' => 'setting/manager'],
+            ['name' => 'setting/content', 'title' => '内容管理', 'route_name' => '', 'icon' => 'fa fa-laptop', 'parent_name' => ''],
 
-            ['name' => 'auth/manager', 'title' => '安全管理', 'route_name' => '', 'icon' => 'am-icon-user-secret', 'parent_name' => ''],
+            ['name' => 'setting/manager', 'title' => '系统设置', 'route_name' => '', 'icon' => 'fa fa-cogs', 'parent_name' => ''],
+            ['name' => 'config/site', 'title' => '站点设置', 'route_name' => 'admin.config.site', 'icon' => '', 'parent_name' => 'setting/manager'],
+
+            ['name' => 'auth/manager', 'title' => '安全管理', 'route_name' => '', 'icon' => 'fa fa-users', 'parent_name' => ''],
 
             ['name' => 'auth/adminer/index', 'title' => '管理员管理', 'route_name' => 'admin.auth.adminer.index', 'icon' => '', 'parent_name' => 'auth/manager'],
             ['name' => 'auth/adminer/create', 'title' => '添加管理员', 'route_name' => 'admin.auth.adminer.create', 'icon' => '', 'parent_name' => 'auth/adminer/index'],
@@ -97,7 +99,7 @@ class Seed extends Command
         }
 
         // 默认管理员群组
-        $default_role_data = ['title' => '超级管理员', 'status' => 1];
+        $default_role_data = ['title' => '运营', 'status' => 1];
         $auth_role = AuthRole::where('title', $default_role_data['title'])->find();
         if(empty($auth_role)){
             $auth_role = AuthRole::create($default_role_data);
@@ -105,10 +107,10 @@ class Seed extends Command
             AuthRole::where('id', $auth_role->id)->update($default_role_data);
         }
 
-        $rule_ids = AuthRule::all()->column('id');
-        $auth_role->rules()->save($rule_ids);
+        // $rule_ids = AuthRule::all()->column('id');
+        // $auth_role->rules()->save($rule_ids);
 
         $manager = Adminer::where('name', 'manager')->find();
-        $auth_role->users()->attach(2);
+        $auth_role->users()->attach($manager->id);
     }
 }

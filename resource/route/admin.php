@@ -4,14 +4,15 @@ Route::group('admin', function(){
     Route::group('auth', function(){
         Route::get('passport/login', 'Auth\\Passport@login')->name('admin.auth.passport.login');
         Route::post('passport/login', 'Auth\\Passport@loginAuth');
+
+        Route::get('/passport/logout', 'auth\\Passport@logout')->name('admin.auth.passport.logout');
     });
 
     Route::group([
         'name' => 'auth',
-        'middleware' => ['tpadmin.admin'],
+        'middleware' => ['tpadmin.admin', 'tpadmin.admin.role'],
     ], function () {
 
-        Route::get('/passport/logout', 'auth\\Passport@logout')->name('admin.auth.passport.logout');
         Route::get('/passport/user', 'auth\\Passport@user')->name('admin.auth.passport.user');
 
         Route::get('/adminer/create', 'auth\\Adminer@create')->name('admin.auth.adminer.create');
@@ -28,6 +29,7 @@ Route::group('admin', function(){
         Route::put('/rule/:id', 'auth\\Rule@update')->name('admin.auth.rule.update');
         Route::delete('/rule/:id', 'auth\\Rule@delete')->name('admin.auth.rule.delete');
         Route::get('/rule', 'auth\\Rule@index')->name('admin.auth.rule.index');
+        Route::post('/rule.resort', 'auth\\Rule@resort')->name('admin.auth.rule.resort');
         Route::post('/rule', 'auth\\Rule@save')->name('admin.auth.rule.save');
 
         Route::get('/role/create', 'auth\\Role@create')->name('admin.auth.role.create');
@@ -39,11 +41,15 @@ Route::group('admin', function(){
         Route::post('/role', 'auth\\Role@save')->name('admin.auth.role.save');
     });
 
-    // 首页
-    Route::get('/', 'Index@index')->name('admin.index');
-    Route::get('/dashboard', 'Index@index')->name('admin.dashboard');
+    Route::group([
+        'name' => '',
+        'middleware' => ['tpadmin.admin'],
+    ], function () {
+        Route::get('/dashboard', 'Index@index')->name('admin.dashboard');
 
-    // 系统配置
-    Route::any('/config/site', 'Config@site')->name('admin.config.site');
-
+        // 系统配置
+        Route::any('/config/site', 'Config@site')->name('admin.config.site');
+        // 首页
+        Route::get('', 'Index@index')->name('admin.index');
+    });
 })->prefix('\\tpadmin\\controller\\');

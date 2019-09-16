@@ -29,43 +29,45 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 权限选择：  </label>
         <div class="col-sm-9">
             {volist name="rule_tree" id="v"}
-            <div class="row">
-                <div class="widget-box">
-                <div class="widget-header">
-                    <h4 class="widget-title">
-                        <label>
-                            <input name="rule_ids[]" class="ace ace-checkbox-2 father" type="checkbox" value="{$v['id']}" <?php if(in_array($v['id'], $rule_ids)){echo('checked="checked"');} ?> onchange="changeGroupStatus(this);"/>
-                            <span class="lbl"> {$v['title']}</span>
-                        </label>
-                    </h4>
-                    <div class="widget-toolbar">
+                <div class="row">
+                    <div class="widget-box">
+                        <div class="widget-header">
+                            <h4 class="widget-title">
+                                <label>
+                                    <input name="rule_ids[]" class="ace ace-checkbox-2 father" type="checkbox" value="{$v['id']}" <?php if(in_array($v['id'], $rule_ids)){echo('checked="checked"');} ?> onchange="changeGroupStatus(this);"/>
+                                    <span class="lbl"> {$v['title']}</span>
+                                </label>
+                            </h4>
+                            <div class="widget-toolbar">
+                                {notempty name="v.children"}
+                                <a href="#" data-action="collapse">
+                                    <i class="ace-icon fa fa-chevron-up"></i>
+                                </a>
+                                {/notempty}
+                            </div>
+                        </div>
                         {notempty name="v.children"}
-                        <a href="#" data-action="collapse">
-                            <i class="ace-icon fa fa-chevron-up"></i>
-                        </a>
+                            <div class="widget-body">
+                                <div class="widget-main row">
+                                    {volist name="v.children" id="vv"}
+                                        <label class="col-xs-2" style="width:160px;">
+                                            <input name="rule_ids[]" class="ace ace-checkbox-2 children" type="checkbox" value="{$vv['id']}" <?php if(in_array($vv['id'], $rule_ids)){echo('checked="checked"');} ?>/>
+                                            <span class="lbl"> {$vv['title']}</span>
+                                        </label>
+                                        {notempty name="vv.children"}
+                                            {volist name="vv.children" id="vvv"}
+                                                <label class="col-xs-2" style="width:160px;">
+                                                    <input name="rule_ids[]" class="ace ace-checkbox-2 children" type="checkbox" value="{$vvv['id']}" <?php if(in_array($vvv['id'], $rule_ids)){echo('checked="checked"');} ?>/>
+                                                    <span class="lbl"> {$vvv['title']}</span>
+                                                </label>
+                                            {/volist}
+                                        {/notempty}
+                                    {/volist}
+                                </div>
+                            </div>
                         {/notempty}
                     </div>
                 </div>
-                {notempty name="v.children"}
-                <div class="widget-body">
-                    <div class="widget-main row">
-                        {volist name="v.children" id="vv"}
-                        <label class="col-xs-2" style="width:160px;">
-                            <input name="rule_ids[]" class="ace ace-checkbox-2 children" type="checkbox" value="{$vv['id']}" <?php if(in_array($vv['id'], $rule_ids)){echo('checked="checked"');} ?>/>
-                            <span class="lbl"> {$vv['title']}</span>
-                        </label>
-                        {volist name="vv.children" id="vvv"}
-                        <label class="col-xs-2" style="width:160px;">
-                            <input name="rule_ids[]" class="ace ace-checkbox-2 children" type="checkbox" value="{$vvv['id']}" <?php if(in_array($vvv['id'], $rule_ids)){echo('checked="checked"');} ?>/>
-                            <span class="lbl"> {$vvv['title']}</span>
-                        </label>
-                        {/volist}
-                        {/volist}
-                    </div>
-                </div>
-                {/notempty}
-                </div>
-            </div>
             {/volist}
         </div>
     </div>
@@ -97,47 +99,23 @@
         });
     }
 
-    $("form#model-form").validate({
-        rules:{
-            "title":{
-                required: true,
-                minlength: 2,
-                maxlength: 10
-            }
-        },
-        messages:{
-            "title":{
-                required: "角色组名不能为空",
-                minlength: "角色组名不能少于2个字符",
-                maxlength: "角色组名不能超过10个字符"
-            }
-        },
-        errorClass: "help-inline input-error",
-        errorElement: "span",
-        highlight:function(element, errorClass, validClass) {
-            $(element).parents('.block').addClass('has-error');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).parents('.block').removeClass('has-error');
-        },
-        submitHandler: function(form){
-            var $form = $(form);
-            $.ajax({
-                url: $form.attr("action"),
-                type: $form.attr("method"),
-                dataType: "JSON",
-                data: $form.serialize(),
-                success: function(data){
-                    if(data.code){
-                        location.href = data["url"];
-                    }else{
-                        alert(data["msg"]);
-                    }
-                }, error: function () {
-                    alert("数据执行错误！");
+    jQuery(function($){
+        validAndSubmitForm(
+            "form#model-form",
+            {
+                "title":{
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
                 }
-            });
-        }
+            },{
+                "title":{
+                    required: "角色组名不能为空",
+                    minlength: "角色组名不能少于2个字符",
+                    maxlength: "角色组名不能超过10个字符"
+                }
+            }
+        );
     });
 </script>
 {/block}

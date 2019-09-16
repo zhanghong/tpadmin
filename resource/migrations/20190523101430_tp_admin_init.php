@@ -43,6 +43,7 @@ class TpAdminInit extends Migrator
         $table = $this->table('auth_rule',array('engine'=>'InnoDB'));
         $table->addColumn('name', 'string', array('limit' => 80, 'default' => '', 'null' => true))
             ->addColumn('title', 'string', array('limit' => 20, 'default' => '', 'null' => false))
+            ->addColumn('type', 'boolean', array('default' => true, 'null' => true))
             ->addColumn('parent_id', 'integer', array('default' => 0, 'signed' => false, 'null' => false))
             ->addColumn('sort_num', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
             ->addColumn('route_name', 'string', array('limit' => 100, 'default' => '', 'null' => true))

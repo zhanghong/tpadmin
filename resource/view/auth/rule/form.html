@@ -93,69 +93,45 @@
 {block name="page_js"}
 <script src="__TPADMIN_ASSETS__/plugins/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript">
-    $("form#model-form").validate({
-        rules:{
-            "title":{
-                required: true,
-                minlength: 2,
-                maxlength: 10
-            }, "name":{
-                required: true,
-                minlength: 1,
-                maxlength: 50
-            }, "route_name":{
-                maxlength: 50
-            }, "icon":{
-                maxlength: 50
-            }, "sort_num":{
-                min: 0,
-                max: 9999
-            }
-        },
-        messages:{
-            "title":{
-                required: "菜单标题不能为空",
-                minlength: "菜单标题不能少于2个字符",
-                maxlength: "菜单标题不能超过10个字符"
-            }, "name":{
-                required: "页面名称不能为空",
-                minlength: "页面名称不能少于1个字符",
-                maxlength: "页面名称不能超过50个字符"
-            }, "route_name":{
-                maxlength: "路由名称不能超过50个字符"
-            }, "icon":{
-                maxlength: "ICON图标不能超过30个字符"
-            }, "sort_num":{
-                min: "排序编号不能小于0",
-                max: "排序编号不能大于9999"
-            }
-        },
-        errorClass: "help-inline input-error",
-        errorElement: "span",
-        highlight:function(element, errorClass, validClass) {
-            $(element).parents('.block').addClass('has-error');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).parents('.block').removeClass('has-error');
-        },
-        submitHandler: function(form){
-            var $form = $(form);
-            $.ajax({
-                url: $form.attr("action"),
-                type: $form.attr("method"),
-                dataType: "JSON",
-                data: $form.serialize(),
-                success: function(data){
-                    if(data.code){
-                        location.href = data["url"];
-                    }else{
-                        alert(data["msg"]);
-                    }
-                }, error: function () {
-                    alert("数据执行错误！");
+    jQuery(function($){
+        validAndSubmitForm(
+            "form#model-form",
+            {
+                "title":{
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
+                }, "name":{
+                    required: true,
+                    minlength: 1,
+                    maxlength: 50
+                }, "route_name":{
+                    maxlength: 50
+                }, "icon":{
+                    maxlength: 50
+                }, "sort_num":{
+                    min: 0,
+                    max: 9999
                 }
-            });
-        }
+            },{
+                "title":{
+                    required: "菜单标题不能为空",
+                    minlength: "菜单标题不能少于2个字符",
+                    maxlength: "菜单标题不能超过10个字符"
+                }, "name":{
+                    required: "页面名称不能为空",
+                    minlength: "页面名称不能少于1个字符",
+                    maxlength: "页面名称不能超过50个字符"
+                }, "route_name":{
+                    maxlength: "路由名称不能超过50个字符"
+                }, "icon":{
+                    maxlength: "ICON图标不能超过30个字符"
+                }, "sort_num":{
+                    min: "排序编号不能小于0",
+                    max: "排序编号不能大于9999"
+                }
+            }
+        );
     });
 </script>
 {/block}

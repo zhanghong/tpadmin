@@ -40,6 +40,11 @@ abstract class Controller extends ThinkController
     //     }
     // }
 
+    /**
+     * 设置视图模板路径
+     * @Author   zhanghong(Laifuzi)
+     * @DateTime 2019-09-10
+     */
     public function setViewPath()
     {
         $view_path = config('tpadmin.template.view_path');
@@ -59,6 +64,12 @@ abstract class Controller extends ThinkController
         }
     }
 
+    /**
+     * 控制方法共用内容
+     * @Author   zhanghong(Laifuzi)
+     * @DateTime 2019-09-10
+     * @return   [type]             [description]
+     */
     public function assignCommon()
     {
         $route_app = app(AuthRuleModel::class);
@@ -84,6 +95,14 @@ abstract class Controller extends ThinkController
         $this->view->assign(compact('menu_tree', 'current_rule', 'current_adminer', 'flash'));
     }
 
+    /**
+     * 预处理搜索表单数据
+     * @Author   zhanghong(Laifuzi)
+     * @DateTime 2019-09-10
+     * @param    Request            $request       请求对象
+     * @param    array              $search_fields 参数列表
+     * @return   array                             预处理后的参数值列表
+     */
     protected function filterSearchData($request, $search_fields)
     {
         $data = [];
@@ -101,6 +120,14 @@ abstract class Controller extends ThinkController
         return $data;
     }
 
+    /**
+     * 预处理表单提交数据
+     * @Author   zhanghong(Laifuzi)
+     * @DateTime 2019-06-10
+     * @param    Request            $request 请求对象
+     * @param    array              $attrs   参数列表
+     * @return   array                       预处理后的表单参数值列表
+     */
     protected function filterPostData($request, $attrs)
     {
         $data = [];

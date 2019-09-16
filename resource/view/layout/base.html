@@ -36,13 +36,6 @@
 
               <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                 <li>
-                  <a href="{:url('personal/public_edit_info')}">
-                    <i class="ace-icon fa fa-user"></i>
-                    个人设置
-                  </a>
-                </li>
-                <li class="divider"></li>
-                <li>
                   <a href="{:url('[admin.auth.passport.logout]')}">
                     <i class="ace-icon fa fa-power-off"></i>
                     退出
@@ -93,74 +86,20 @@
     <script src="__TPADMIN_ASSETS__/plugins/ace/js/ace.min.js"></script>
     <!-- inline scripts related to this page -->
     <script src="__TPADMIN_ASSETS__/plugins/artDialog/dist/dialog.js"></script>
+    <script src="__TPADMIN_ASSETS__/admin/js/common.js?v=201930534"></script>
     {block name="page_js"}{/block}
     <!--artDialog end-->
     <script>
-        var u = $(".active").parent('ul');
+        // var u = $(".active").parent('ul');
 
-        var uc = u.attr("class");//
+        // var uc = u.attr("class");//
 
-        if (uc == 'submenu') {
-            u.parent().attr("class", "open active");
-            if(u.parent().parent().attr('class')=='submenu'){
-                u.parent().parent().parent().attr("class","open active");
-            }
-        }
-
-        //弹出图片
-        function alert_img(url, width, heigth, title) {
-            art.dialog({
-                padding: 0,
-                title: title,
-                content: '<img src="' + url + '" width="' + width + '" height="' + heigth + '" />',
-                lock: true
-            });
-        }
-
-        //弹出确认操作
-        function alert_del(clickItem) {
-            var $clickItem = $(clickItem);
-
-            var url = $clickItem.data('del-href');
-            if(typeof(url) == "undefined"){
-                return false;
-            }
-
-            var data = [];
-            var id = $clickItem.data('del-id');
-            if(typeof(id) != "undefined"){
-                data['id'] = id;
-            }
-
-            var art = dialog({
-                title: '删除警告',
-                content: '确认要删除吗？',
-                okValue: '确定',
-                ok: function () {
-                    this.title('提交中…');
-                    $.ajax({
-                        url: url,
-                        type: "DELETE",
-                        dataType: "JSON",
-                        data: data,
-                        success: function(data){
-                            if(data["code"]){
-                                // location.href = data["url"];
-                            }else{
-                                alert(data["msg"]);
-                            }
-                            location.reload();
-                        }, error: function () {
-                            alert("数据执行错误！");
-                        }
-                    });
-                    return false;
-                },
-                cancelValue: '取消',
-                cancel: function () {}
-            });
-            art.showModal();
-        }
+        // if (uc == 'submenu') {
+        //     u.parent().attr("class", "open active");
+        //     if(u.parent().parent().attr('class')=='submenu'){
+        //         u.parent().parent().parent().attr("class","open active");
+        //     }
+        // }
     </script>
   </body>
 </html>
