@@ -27,6 +27,7 @@
         "topthink/think-captcha": "^2.0",
         "zzstudio/think-auth": "^1.0",
         "league/flysystem": "^1.0",
-        "topthink/framework": "5.1.*"
+        "topthink/framework": "5.1.*",
+        "topthink/think-migration": "2.0.*"
     }
 }
