@@ -8,6 +8,7 @@ use League\Flysystem\MountManager;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
+use think\facade\Config;
 use think\Loader;
 
 class Init extends Command
@@ -34,19 +35,29 @@ class Init extends Command
      */
     private function publishAssets()
     {
-        $assets = ltrim(config('tpadmin.template.tpl_replace_string.__TPADMIN_ASSETS__'), '/');
-        $publicName = trim(config('tpadmin.template.public_name'), '/');
-        $documentPath = Loader::getRootPath();
+        $cfg = Config::get('tpadmin.');
 
-        if (!empty($publicName)) {
-            $documentPath .= $publicName.'/';
+        $assets = 'static/assets';
+        $publicName = 'public';
+        if(isset($cfg['template'])){
+            $tpl = $cfg['template'];
+
+            if(isset($tpl['public_name'])){
+                $publicName = trim($tpl['public_name'], '/');
+            }
+
+            if(isset($tpl['tpl_replace_string']) && isset($tpl['tpl_replace_string']['__TPADMIN_ASSETS__'])){
+                $assets = ltrim($tpl['tpl_replace_string']['__TPADMIN_ASSETS__'], '/');
+            }
         }
 
         $source = new Filesystem(
             new Local(__DIR__.'/../../resource/assets')
         );
+
+        $rootPath = Loader::getRootPath();
         $traget = new Filesystem(
-            new Local($documentPath.$assets)
+            new Local($rootPath . $publicName .'/' .$assets)
         );
 
         return $this->copyLocalDir($source, $traget);
