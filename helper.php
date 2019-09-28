@@ -163,6 +163,18 @@ if (!function_exists('format_show_time')) {
     }
 }
 
+if (!function_exists('adminer_check')) {
+    function adminer_check($name, $adminer)
+    {
+        if(empty($adminer)){
+            return false;
+        }else if($adminer->is_default){
+            return true;
+        }
+        return auth_check($name, $adminer->id);
+    }
+}
+
 \think\Console::addDefaultCommands([
     'tpadmin:init' => \tpadmin\command\Init::class,
     'tpadmin:seed' => \tpadmin\command\Seed::class,
