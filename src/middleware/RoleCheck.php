@@ -35,6 +35,8 @@ class RoleCheck
         }
 
         $route_name = strtolower(str_replace('@', '/', $route_info['route']));
+        $route_name = str_replace('save', 'create', $route_name);
+        $route_name = str_replace('update', 'edit', $route_name);
         if(!auth_check($route_name, $adminer->id)){
             $error_msg = '对不起，您没有权限访问该页面';
             if($request->isAjax()){
