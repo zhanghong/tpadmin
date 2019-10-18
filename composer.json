@@ -1,9 +1,9 @@
 {
     "name": "zhanghong/tpadmin",
-    "description": "the admin framework based on thinkphp 5.1",
+    "description": "the admin framework based on thinkphp 6.0",
     "keywords": [
         "framework",
-        "tp5.1",
+        "tp6.0",
         "thinkphp",
         "admin"
     ],
@@ -23,10 +23,11 @@
         ]
     },
     "require": {
+        "php": ">=7.1.0",
         "zzstudio/think-auth": "^1.0",
         "league/flysystem": "^1.0",
-        "topthink/framework": "5.1.*",
-        "topthink/think-migration": "2.0.*",
-        "topthink/think-captcha": "2.0.*"
+        "topthink/think-migration": "3.0.*",
+        "topthink/think-captcha": "3.0.*",
+        "topthink/think-view": "1.0.*"
     }
 }
