@@ -28,9 +28,9 @@ class Config extends Controller
             try{
                 $config = ConfigModel::createOrUpdateByName($name, $settings);
             }catch (ValidateException $e){
-                $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+                return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
             }catch (\Exception $e){
-                $this->error($e->getMessage());
+                return $this->error($e->getMessage());
             }
 
             $success_message = '更新成功';
@@ -38,8 +38,9 @@ class Config extends Controller
             return $this->success($success_message);
         }else{
             $config = ConfigModel::findOrCreateByName($name);
-            $this->assign('settings', $config->settings);
-            return $this->fetch('config/site');
+            return $this->fetch('config/site', [
+                'settings' => $config->settings,
+            ]);
         }
     }
 }

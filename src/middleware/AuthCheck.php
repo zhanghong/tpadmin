@@ -8,17 +8,19 @@ class AuthCheck
 {
     public function handle($request, \Closure $next)
     {
+        $url = (string) url('[admin.auth.passport.login]');
+
         if (Auth::guard()->guest()) {
             if($request->isAjax()){
                 $result = [
                     'code' => 0,
                     'msg'  => '请先登录系统',
                     'data' => [],
-                    'url'  => url('[admin.auth.passport.login]'),
+                    'url'  => $url,
                 ];
                 return json($result);
             }else{
-                return redirect('[admin.auth.passport.login]');
+                return redirect($url);
             }
         }
 

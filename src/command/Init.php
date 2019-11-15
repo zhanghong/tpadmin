@@ -9,10 +9,12 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use think\facade\Config;
-use think\Loader;
 
 class Init extends Command
 {
+    protected $app_root_path;
+    protected $module_name;
+
     protected function configure()
     {
         $this->setName('tpadmin:init')->setDescription('init tpadmin');
@@ -20,6 +22,7 @@ class Init extends Command
 
     protected function execute(Input $input, Output $output)
     {
+        $this->app_root_path = app()->getRootPath();
         $this->publishConfig();
         $this->publishRoute();
         $this->publishMigrations();
@@ -31,7 +34,7 @@ class Init extends Command
      * 发布资源文件
      * @Author   zhanghong(Laifuzi)
      * @DateTime 2019-05-24
-     * @return   [type]             [description]
+     * @return   bool
      */
     private function publishAssets()
     {
@@ -55,7 +58,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/assets')
         );
 
-        $rootPath = Loader::getRootPath();
+        $rootPath = $this->app_root_path;
         $traget = new Filesystem(
             new Local($rootPath . $publicName .'/' .$assets)
         );
@@ -67,7 +70,7 @@ class Init extends Command
      * 发布配置文件
      * @Author   zhanghong(Laifuzi)
      * @DateTime 2019-05-24
-     * @return   [type]             [description]
+     * @return   bool
      */
     private function publishConfig()
     {
@@ -75,7 +78,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/config')
         );
         $traget = new Filesystem(
-            new Local(Loader::getRootPath().'config')
+            new Local($this->app_root_path.'config')
         );
 
         return $this->copyLocalDir($source, $traget);
@@ -85,7 +88,7 @@ class Init extends Command
      * 发布路由文件
      * @Author   zhanghong(Laifuzi)
      * @DateTime 2019-05-24
-     * @return   [type]             [description]
+     * @return   bool
      */
     private function publishRoute()
     {
@@ -93,7 +96,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/route')
         );
         $traget = new Filesystem(
-            new Local(Loader::getRootPath().'route')
+            new Local($this->app_root_path.'route/admin')
         );
 
         return $this->copyLocalDir($source, $traget);
@@ -103,7 +106,7 @@ class Init extends Command
      * 复制数据库迁移文件
      * @Author   zhanghong(Laifuzi)
      * @DateTime 2019-05-24
-     * @return   [type]             [description]
+     * @return   bool
      */
     private function publishMigrations()
     {
@@ -111,7 +114,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/migrations')
         );
         $traget = new Filesystem(
-            new Local(Loader::getRootPath().'database/migrations/')
+            new Local($this->app_root_path.'database/migrations/')
         );
 
         return $this->copyLocalDir($source, $traget);
@@ -121,7 +124,7 @@ class Init extends Command
      * 发布管理员视图页面
      * @Author   zhanghong(Laifuzi)
      * @DateTime 2019-05-24
-     * @return   [type]             [description]
+     * @return   bool
      */
     private function publishAdminView()
     {
@@ -129,7 +132,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/view')
         );
         $traget = new Filesystem(
-            new Local(Loader::getRootPath().'application/admin/view/')
+            new Local($this->app_root_path.'app/admin/view/')
         );
 
         return $this->copyLocalDir($source, $traget);
@@ -141,7 +144,7 @@ class Init extends Command
      * @DateTime 2019-05-24
      * @param    Local              $source_local 来源文件夹
      * @param    Local              $traget_local 目标文件夹
-     * @return   boolean                          [description]
+     * @return   bool
      */
     private function copyLocalDir($source_local, $traget_local)
     {

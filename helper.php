@@ -1,5 +1,6 @@
 <?php
 use think\facade\Request;
+use think\facade\Console;
 
 if (!function_exists('script_path')) {
     function script_path()
@@ -87,14 +88,10 @@ if (!function_exists('array_deep_merge')) {
 if (!function_exists('current_request_route')) {
     function current_request_route()
     {
-        $route_info = request()->routeInfo();
-        if(empty($route_info) || empty($route_info['route'])){
-            return '';
-        }
-        $route = str_replace(['\\', '@'], '/', $route_info['route']);
-        $route = str_replace('update', 'edit', $route);
-        $route = str_replace('create', 'save', $route);
-        return  strtolower($route);
+        $action = request()->action(true);
+        $action = str_replace('update', 'edit', $action);
+        $action = str_replace('create', 'save', $action);
+        return  strtolower($action);
     }
 }
 
@@ -175,10 +172,10 @@ if (!function_exists('adminer_check')) {
     }
 }
 
-\think\Console::addDefaultCommands([
-    'tpadmin:init' => \tpadmin\command\Init::class,
-    'tpadmin:seed' => \tpadmin\command\Seed::class,
-]);
+// Console::addCommands([
+//     'tpadmin:init' => \tpadmin\command\Init::class,
+//     'tpadmin:seed' => \tpadmin\command\Seed::class,
+// ]);
 
 // Route::group('admin/auth', function () {
 //     Route::get('passport/login', '\\tpadmin\\Config@login')->name('admin.auth.passport.login');

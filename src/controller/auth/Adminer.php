@@ -26,7 +26,7 @@ class Adminer extends Controller
     public function create(Request $request)
     {
         $adminer = [];
-        $roles = AuthRoleModel::all();
+        $roles = AuthRoleModel::select();
         $role_id = 0;
 
         return $this->fetch('auth/adminer/create', compact('adminer', 'role_id', 'roles'));
@@ -38,9 +38,9 @@ class Adminer extends Controller
         try {
             $adminer = AdminerModel::createItem($data);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '创建成功';
@@ -52,10 +52,10 @@ class Adminer extends Controller
     {
         $adminer = AdminerModel::find(intval($id));
         if(empty($adminer)){
-            $this->error('未找到被管理员信息');
+            return $this->error('未找到被管理员信息');
         }
 
-        $roles = AuthRoleModel::all();
+        $roles = AuthRoleModel::select();
         $role_user = AuthRoleUserModel::where('user_id', $adminer->id)->find();
         if(empty($role_user)){
             $role_id = 0;
@@ -72,9 +72,9 @@ class Adminer extends Controller
         try {
             $adminer = AdminerModel::updateItem($id, $data);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '更新成功';
@@ -99,7 +99,7 @@ class Adminer extends Controller
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[admin.auth.adminer.index]');
+        return $this->redirect('[admin.auth.adminer.index]');
     }
 
     private function getPostData($request)

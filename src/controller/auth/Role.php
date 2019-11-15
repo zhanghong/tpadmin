@@ -25,15 +25,14 @@ class Role extends Controller
 
     public function create(Request $request)
     {
-        $role = ['title' => '', 'status' => 1];
-        $this->assign('role', $role);
-        $this->assign('rule_ids', []);
-
         $ruleModel = new AuthRuleModel;
         $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
-        $this->assign('rule_tree', $rule_tree);
 
-        return $this->fetch('auth/role/form');
+        return $this->fetch('auth/role/form', [
+            'rule_ids' => [],
+            'role' => ['title' => '', 'status' => 1],
+            'rule_tree' => $rule_tree,
+        ]);
     }
 
     public function save(Request $request)
@@ -45,9 +44,9 @@ class Role extends Controller
         try{
             $rule = AuthRoleModel::createItem($data);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '创建成功';
@@ -59,16 +58,17 @@ class Role extends Controller
     {
         $role = AuthRoleModel::find($id);
         if(empty($role)){
-            $this->redirect('[admin.auth.role.index]');
+            return $this->redirect('[admin.auth.role.index]');
         }
-        $this->assign('role', $role);
-        $this->assign('rule_ids', $role->allowRoleIds());
 
         $ruleModel = new AuthRuleModel;
         $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
-        $this->assign('rule_tree', $rule_tree);
 
-        return $this->fetch('auth/role/form');
+        return $this->fetch('auth/role/form', [
+            'role' => $role,
+            'rule_ids' => $role->allowRoleIds(),
+            'rule_tree' => $rule_tree,
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -80,9 +80,9 @@ class Role extends Controller
         try{
             $role = AuthRoleModel::updateItem($id, $data);
         } catch (ValidateException $e) {
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         } catch (\Exception $e) {
-            $this->error($e->getError());
+            return $this->error($e->getError());
         }
 
         $success_message = '更新成功';
@@ -93,7 +93,7 @@ class Role extends Controller
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[admin.auth.role.index]');
+        return $this->redirect('[admin.auth.role.index]');
     }
 
     public function delete(Request $request, $id)
@@ -107,7 +107,7 @@ class Role extends Controller
         }
 
         if(!is_null($error_msg)){
-            $this->error($error_msg);
+            return $this->error($error_msg);
         }
 
         $success_message = '删除成功';

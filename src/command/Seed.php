@@ -107,9 +107,6 @@ class Seed extends Command
             AuthRole::where('id', $auth_role->id)->update($default_role_data);
         }
 
-        // $rule_ids = AuthRule::all()->column('id');
-        // $auth_role->rules()->save($rule_ids);
-
         $manager = Adminer::where('name', 'manager')->find();
         $auth_role->users()->attach($manager->id);
     }

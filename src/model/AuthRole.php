@@ -26,12 +26,10 @@ class AuthRole extends Model
         return $this->belongsToMany('Adminer', '\\tpadmin\\model\\AuthRoleUser', 'user_id', 'role_id');
     }
 
-    protected static function init()
+    public static function onAfterDelete($role)
     {
-        self::afterDelete(function ($role) {
-            AuthRoleRule::where('role_id', $role->id)->delete();
-            AuthRoleUser::where('role_id', $role->id)->delete();
-        });
+        AuthRoleRule::where('role_id', $role->id)->delete();
+        AuthRoleUser::where('role_id', $role->id)->delete();
     }
 
     public static function paginateSelect($params = [], $page_rows = 15)

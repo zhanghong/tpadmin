@@ -132,7 +132,7 @@ trait Tree
 
     protected function allNodes()
     {
-        return $this->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->all()->toArray();
+        return $this->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->select()->toArray();
     }
 
     protected function userNodes()
@@ -156,6 +156,6 @@ trait Tree
             return [];
         }
 
-        return $this->whereIn($this->pk, $rule_ids)->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->all()->toArray();
+        return $this->whereIn($this->pk, $rule_ids)->order($this->sortColumn, 'ASC')->order($this->pk, 'ASC')->select()->toArray();
     }
 }

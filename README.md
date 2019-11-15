@@ -13,40 +13,59 @@
 ## 安装
 最方便的安装方式就是使用Composer ( https://getcomposer.org/ )，在这之前**务必**先搭建好thinkphp5.1项目
 
-1、安装 Tpadmin :
+1 安装 Tpadmin :
 ```shell
 $ composer require zhanghong/tpadmin
 ```
 
-2、配置
+2. 容器Provider
 
-添加行为在 `application/tags.php`
+在项目或应用的容器Provider添加以下定义（项目配置文件是：app/provider.php，应用配置文件是：app/app_name/provider.php）：
 
-```
+
+```php
+<?php
 return [
-
-    'app_init'     => [
-        \tpadmin\behavior\Boot::class,
-    ],
-
-    // ...
+    .
+    .
+    .
+    \tpadmin\service\upload\contract\Factory::class => \tpadmin\service\upload\Uploader::class,
+    \tpadmin\service\auth\contract\Authenticate::class => \tpadmin\model\Adminer::class,
+    \tpadmin\service\auth\guard\contract\Guard::class => \tpadmin\service\auth\guard\SessionGuard::class,
+    \tpadmin\service\auth\contract\Auth::class => \tpadmin\service\auth\Auth::class,
 ];
 ```
 
-3、初始化和数据迁移
+3. 配置自定义命令
+
+在配置文件(config/console.php)里注册扩展包的自定义命令
+
+*config/console.php*
+```php
+<?php
+return [
+    'commands' => [
+        .
+        .
+        .
+        // 可以把tpadmin:init:seed修改任何你喜欢的名称
+        'tpadmin:init' => 'tpadmin\command\Init',
+        'tpadmin:seed' => 'tpadmin\command\Seed',
+    ],
+];
+```
+
+4. 初始化和数据迁移
+
 ```shell
-#初始化
-$ php think tpadmin:init
-#安装数据库迁移扩展包
-$ composer require topthink/think-migration=2.0.*
 #创建Tpadmin数据表
 $ php think migrate:run
-#添加初始化数据
+# 初始化(与注册的自定义命令保持一致)
+$ php think tpadmin:init
+#添加初始化数据(与注册的自定义命令保持一致)
 $ php think tpadmin:seed
 ```
 
 ## 进入tpadmin后台
 
-打开后台地址，例如：
-
-http://yourdomain/admin
+后台登录地址是 `http://yourdomain/admin` ，扩展包安装成功后自带了两个管理员账号（admin:123456, manager:123456）。

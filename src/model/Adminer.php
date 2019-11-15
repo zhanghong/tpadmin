@@ -19,11 +19,9 @@ class Adminer extends Model implements Authenticate
         return $this->belongsToMany('AuthRole', '\\tpadmin\\model\\AuthRoleUser', 'role_id', 'user_id');
     }
 
-    protected static function init()
+    public static function onAfterDelete($adminer)
     {
-        self::afterDelete(function ($adminer) {
-            AuthRoleUser::where('user_id', $adminer->id)->delete();
-        });
+        AuthRoleUser::where('user_id', $adminer->id)->delete();
     }
 
     public function setPasswordAttr($value)

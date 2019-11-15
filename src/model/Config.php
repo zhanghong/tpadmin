@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpadmin\model;
 
 use tpadmin\validate\Config as Validate;

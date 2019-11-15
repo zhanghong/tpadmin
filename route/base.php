@@ -1,17 +1,23 @@
 <?php
 
-Route::group('admin', function(){
+use think\facade\Route;
+
+Route::group(function(){
     Route::group('auth', function(){
-        Route::get('passport/login', 'Auth\\Passport@login')->name('admin.auth.passport.login');
-        Route::post('passport/login', 'Auth\\Passport@loginAuth');
+        Route::get('passport/login', 'auth\\Passport@create')->name('admin.auth.passport.login');
+        Route::post('passport/login', 'auth\\Passport@save');
+        Route::post('auth/passport/login', 'auth\\Passport@save');
     });
 
-    Route::group([
-        'name' => 'auth',
-        'middleware' => ['tpadmin.admin'],
-    ], function () {
+    Route::group(function(){
+        Route::get('/', 'Index@index')->name('admin.index');
+        Route::get('/dashboard', 'Index@index')->name('admin.dashboard');
+        Route::get('passport/logout', 'Auth\\Passport@delete')->name('admin.auth.passport.logout');
+    })->middleware('tpadmin.admin');
 
-        Route::get('/passport/logout', 'auth\\Passport@logout')->name('admin.auth.passport.logout');
+    Route::group(function(){
+        Route::any('/config/site', 'Config@site')->name('admin.config.site');
+
         Route::get('/passport/user', 'auth\\Passport@user')->name('admin.auth.passport.user');
 
         Route::get('/adminer/create', 'auth\\Adminer@create')->name('admin.auth.adminer.create');
@@ -28,6 +34,7 @@ Route::group('admin', function(){
         Route::put('/rule/:id', 'auth\\Rule@update')->name('admin.auth.rule.update');
         Route::delete('/rule/:id', 'auth\\Rule@delete')->name('admin.auth.rule.delete');
         Route::get('/rule', 'auth\\Rule@index')->name('admin.auth.rule.index');
+        Route::post('/rule.resort', 'auth\\Rule@resort')->name('admin.auth.rule.resort');
         Route::post('/rule', 'auth\\Rule@save')->name('admin.auth.rule.save');
 
         Route::get('/role/create', 'auth\\Role@create')->name('admin.auth.role.create');
@@ -37,17 +44,5 @@ Route::group('admin', function(){
         Route::delete('/role/:id', 'auth\\Role@delete')->name('admin.auth.role.delete');
         Route::get('/role', 'auth\\Role@index')->name('admin.auth.role.index');
         Route::post('/role', 'auth\\Role@save')->name('admin.auth.role.save');
-    });
-
-    Route::group([
-        'name' => '',
-        'middleware' => ['tpadmin.admin'],
-    ], function () {
-        // 首页
-        Route::get('/', 'Index@index')->name('admin.index');
-        Route::get('/dashboard', 'Index@index')->name('admin.dashboard');
-
-        // 系统配置
-        Route::any('/config/site', 'Config@site')->name('admin.config.site');
-    });
+    })->middleware(['tpadmin.admin', 'tpadmin.admin.role']);
 })->prefix('\\tpadmin\\controller\\');

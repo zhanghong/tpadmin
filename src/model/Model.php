@@ -20,7 +20,7 @@ abstract class Model extends Base
         return $item->reload();
     }
 
-    protected static function baesUpdateItem($id, array $data, $validate = NULL, $only_allow = true)
+    protected static function baesUpdateItem($id, array $data, $validate = NULL, $only_allow = [])
     {
         $id = intval($id);
         $item = self::find($id);
@@ -32,7 +32,7 @@ abstract class Model extends Base
         return $item->runUpdate($data, $validate, $only_allow);
     }
 
-    protected function runUpdate($data, $validate = NULL, $only_allow = true)
+    protected function runUpdate($data, $validate = NULL, $only_allow = [])
     {
         if (!empty($validate) && !$validate->batch(true)->check($data)) {
             $e = new ValidateException('数据验证失败');
@@ -40,7 +40,7 @@ abstract class Model extends Base
             throw $e;
         }
 
-        $this->allowField($only_allow)->save($data, ['id' => $this->id]);
+        $this->allowField($only_allow)->save($data);
         return $this;
     }
 

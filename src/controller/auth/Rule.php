@@ -22,14 +22,13 @@ class Rule extends Controller
 
     public function create(Request $request)
     {
-        $rule = ['parent_id' => 0];
-        $this->assign('rule', $rule);
-
         $ruleModel = new AuthRuleModel;
         $parent_rules = $ruleModel->flatTree();
-        $this->assign('parent_rules', $parent_rules);
 
-        return $this->fetch('auth/rule/form');
+        return $this->fetch('auth/rule/form', [
+            'rule' => ['parent_id' => 0],
+            'parent_rules' => $ruleModel->flatTree(),
+        ]);
     }
 
     public function save(Request $request)
@@ -41,9 +40,9 @@ class Rule extends Controller
         try{
             $rule = AuthRuleModel::createItem($data);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '创建成功';
@@ -55,15 +54,16 @@ class Rule extends Controller
     {
         $rule = AuthRuleModel::find($id);
         if(empty($rule)){
-            $this->redirect('[admin.auth.rule.index]');
+            return $this->redirect('[admin.auth.rule.index]');
         }
-        $this->assign('rule', $rule);
 
         $ruleModel = new AuthRuleModel;
         $parent_rules = $ruleModel->flatTree();
-        $this->assign('parent_rules', $parent_rules);
 
-        return $this->fetch('auth/rule/form');
+        return $this->fetch('auth/rule/form', [
+            'rule' => $rule,
+            'parent_rules' => $ruleModel->flatTree(),
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -75,9 +75,9 @@ class Rule extends Controller
         try{
             $rule = AuthRuleModel::updateItem($id, $data);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '更新成功';
@@ -88,7 +88,7 @@ class Rule extends Controller
     public function read(Request $request, $id)
     {
         Session::flash('info', '您访问的页面不存在');
-        $this->redirect('[admin.auth.rule.index]');
+        return $this->redirect('[admin.auth.rule.index]');
     }
 
     public function delete(Request $request, $id)
@@ -102,7 +102,7 @@ class Rule extends Controller
         }
 
         if(!is_null($error_msg)){
-            $this->error($error_msg);
+            return $this->error($error_msg);
         }
 
         $success_message = '删除成功';
@@ -114,7 +114,7 @@ class Rule extends Controller
     {
         $items = $request->post('items');
         AuthRuleModel::resort($items);
-        $this->redirect('[admin.auth.rule.index]');
+        return $this->redirect('[admin.auth.rule.index]');
     }
 
     private function getPostData($request)

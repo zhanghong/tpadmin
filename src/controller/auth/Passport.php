@@ -2,19 +2,20 @@
 
 namespace tpadmin\controller\auth;
 
-use tpadmin\service\auth\contract\Auth;
-use tpadmin\controller\Controller;
-use think\Request;
+use think\App;
 use think\facade\Route;
+use think\facade\Config;
+use tpadmin\controller\Controller;
+use tpadmin\service\auth\contract\Auth;
 use tpadmin\exception\ValidateException;
 
 class Passport extends Controller
 {
     protected $auth;
 
-    public function __construct(Auth $auth)
+    public function __construct(App $app, Auth $auth)
     {
-        parent::__construct();
+        parent::__construct($app);
         $this->auth = $auth;
     }
 
@@ -33,26 +34,26 @@ class Passport extends Controller
         }
     }
 
-    public function login()
+    public function create()
     {
-        return $this->fetch('auth/passport/login');
+        return $this->fetch('auth/passport/create');
     }
 
-    public function loginAuth(Request $request)
+    public function save()
     {
         try {
-            $this->auth->login($request);
+            $this->auth->login($this->request);
         }catch (ValidateException $e){
-            $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
+            return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
-            $this->error($e->getMessage());
+            return $this->error($e->getMessage());
         }
-        $this->success('登录成功', url('[admin.index]'));
+        return $this->success('登录成功', url('[admin.index]'));
     }
 
-    public function logout()
+    public function delete()
     {
         $this->auth->logout();
-        return redirect('[admin.auth.passport.login]');
+        return $this->redirect('[admin.auth.passport.login]');
     }
 }
