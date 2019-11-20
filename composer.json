@@ -25,6 +25,7 @@
     "require": {
         "php": ">=7.1.0",
         "league/flysystem": "^1.0",
+        "zzstudio/think-auth": "^2.0",
         "topthink/think-migration": "3.0.*",
         "topthink/think-captcha": "3.0.*",
         "topthink/think-view": "1.0.*",
