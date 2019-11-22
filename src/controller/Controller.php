@@ -44,7 +44,7 @@ abstract class Controller
      */
     public function setViewPath()
     {
-        $config = $view_path = Config::get('tpadmin.template');
+        $config = Config::get('tpadmin.template');
         $this->app->config->set($config, 'view');
 
         $assetsName = '/static/assets';

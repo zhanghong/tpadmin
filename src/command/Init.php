@@ -23,10 +23,10 @@ class Init extends Command
     protected function execute(Input $input, Output $output)
     {
         $this->app_root_path = app()->getRootPath();
-        $this->publishConfig();
-        $this->publishRoute();
-        $this->publishMigrations();
-        $this->publishAssets();
+        // $this->publishConfig();
+        // $this->publishRoute();
+        // $this->publishMigrations();
+        // $this->publishAssets();
         $this->publishAdminView();
     }
 
@@ -78,7 +78,7 @@ class Init extends Command
             new Local(__DIR__.'/../../resource/config')
         );
         $traget = new Filesystem(
-            new Local($this->app_root_path.'config')
+            new Local($this->app_root_path.'app/admin/config')
         );
 
         return $this->copyLocalDir($source, $traget);
