@@ -7,7 +7,7 @@ use think\helper\Str;
 use think\facade\Session;
 use think\facade\Config;
 use tpadmin\service\auth\facade\Auth as AuthFacade;
-use tpadmin\model\AuthRule as AuthRuleModel;
+use tpadmin\model\Rule as RuleModel;
 
 class RoleCheck
 {

@@ -23,10 +23,10 @@ class Init extends Command
     protected function execute(Input $input, Output $output)
     {
         $this->app_root_path = app()->getRootPath();
-        // $this->publishConfig();
-        // $this->publishRoute();
-        // $this->publishMigrations();
-        // $this->publishAssets();
+        $this->publishConfig();
+        $this->publishRoute();
+        $this->publishMigrations();
+        $this->publishAssets();
         $this->publishAdminView();
     }
 

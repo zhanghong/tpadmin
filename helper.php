@@ -1,6 +1,12 @@
 <?php
-use think\facade\Request;
-use think\facade\Console;
+declare(strict_types=1);
+
+\think\Console::starting(function (\think\Console $console) {
+    $console->addCommands([
+        'tpadmin:init' => '\\tpadmin\\command\\Init',
+        'tpadmin:seed' => '\\tpadmin\\command\\Seed'
+    ]);
+});
 
 if (!function_exists('script_path')) {
     function script_path()

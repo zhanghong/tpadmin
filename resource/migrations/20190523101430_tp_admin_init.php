@@ -56,31 +56,25 @@ class TpAdminInit extends Migrator
             ->addIndex(['name'], ['name' => 'idx_name', 'unique' => true])
             ->save();
 
-        $table = $this->table('auth_role',array('engine'=>'InnoDB'));
+        $table = $this->table('auth_role', array('engine'=>'InnoDB'));
         $table->addColumn('title', 'string', array('limit' => 20, 'default' => '', 'null' => false))
             ->addColumn('status', 'boolean', array('default' => 1, 'null' => false))
             ->addColumn('create_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
             ->addColumn('update_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
             ->save();
 
-        $table = $this->table('auth_role_user',array('engine'=>'InnoDB'));
+        $table = $this->table('auth_role_user', array('id' => false, 'primary_key' => ['user_id', 'role_id'], 'engine'=>'InnoDB'));
         $table->addColumn('user_id', 'integer', array('default' => 0, 'signed' => false, 'null' => false))
             ->addColumn('role_id', 'integer', array('default' => 0, 'signed' => false, 'null' => false))
-            ->addColumn('create_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
-            ->addColumn('update_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
-            ->addIndex(['user_id', 'role_id'], ['name' => 'unique_user_and_role', 'unique' => true])
-            ->addIndex(['user_id'], ['name' => 'idx_user_id'])
-            ->addIndex(['role_id'], ['name' => 'idx_role_id'])
+            ->addIndex(['user_id'], ['name' => 'uid'])
+            ->addIndex(['role_id'], ['name' => 'group_id'])
             ->save();
 
-        $table = $this->table('auth_role_rule',array('engine'=>'InnoDB'));
+        $table = $this->table('auth_role_rule', array('id' => false, 'primary_key' => ['role_id', 'rule_id'], 'engine'=>'InnoDB'));
         $table->addColumn('rule_id', 'integer', array('default' => 0, 'signed' => false, 'null' => false))
             ->addColumn('role_id', 'integer', array('default' => 0, 'signed' => false, 'null' => false))
-            ->addColumn('create_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
-            ->addColumn('update_time', 'integer', array('default' => 0, 'signed' => false, 'null' => true))
-            ->addIndex(['rule_id', 'role_id'], ['name' => 'unique_rule_and_role', 'unique' => true])
-            ->addIndex(['rule_id'], ['name' => 'idx_rule_id'])
-            ->addIndex(['role_id'], ['name' => 'idx_role_id'])
+            ->addIndex(['role_id'], ['name' => 'role_id'])
+            ->addIndex(['rule_id'], ['name' => 'rule_id'])
             ->save();
 
         $table = $this->table('config',array('engine'=>'InnoDB'));

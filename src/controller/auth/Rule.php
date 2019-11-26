@@ -7,13 +7,13 @@ use think\facade\Session;
 use tpadmin\controller\Controller;
 use tpadmin\exception\ValidateException;
 
-use tpadmin\model\AuthRule as AuthRuleModel;
+use tpadmin\model\Rule as RuleModel;
 
 class Rule extends Controller
 {
     public function index()
     {
-        $ruleModel = new AuthRuleModel;
+        $ruleModel = new RuleModel;
         $list = $ruleModel->flatTree();
         return $this->fetch('auth/rule/index', [
             'list' => $list,
@@ -22,7 +22,7 @@ class Rule extends Controller
 
     public function create(Request $request)
     {
-        $ruleModel = new AuthRuleModel;
+        $ruleModel = new RuleModel;
         $parent_rules = $ruleModel->flatTree();
 
         return $this->fetch('auth/rule/form', [
@@ -38,7 +38,7 @@ class Rule extends Controller
         $data = $this->getPostData($request);
 
         try{
-            $rule = AuthRuleModel::createItem($data);
+            $rule = RuleModel::createItem($data);
         }catch (ValidateException $e){
             return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
@@ -52,12 +52,12 @@ class Rule extends Controller
 
     public function edit(Request $request, $id)
     {
-        $rule = AuthRuleModel::find($id);
+        $rule = RuleModel::find($id);
         if(empty($rule)){
             return $this->redirect('[admin.auth.rule.index]');
         }
 
-        $ruleModel = new AuthRuleModel;
+        $ruleModel = new RuleModel;
         $parent_rules = $ruleModel->flatTree();
 
         return $this->fetch('auth/rule/form', [
@@ -73,7 +73,7 @@ class Rule extends Controller
         $data = $this->getPostData($request);
 
         try{
-            $rule = AuthRuleModel::updateItem($id, $data);
+            $rule = RuleModel::updateItem($id, $data);
         }catch (ValidateException $e){
             return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
@@ -96,7 +96,7 @@ class Rule extends Controller
         $error_msg = NULL;
 
         try {
-            AuthRuleModel::destroy($id);
+            RuleModel::destroy($id);
         } catch (\Exception $e) {
             $error_msg = $e->getMessage();
         }
@@ -113,7 +113,7 @@ class Rule extends Controller
     public function resort(Request $request)
     {
         $items = $request->post('items');
-        AuthRuleModel::resort($items);
+        RuleModel::resort($items);
         return $this->redirect('[admin.auth.rule.index]');
     }
 
@@ -128,6 +128,7 @@ class Rule extends Controller
             ['name' => 'icon', 'type' => 'string', 'default' => ''],
             ['name' => 'condition', 'type' => 'string', 'default' => ''],
             ['name' => 'tips', 'type' => 'string', 'default' => ''],
+            ['name' => 'status', 'type' => 'boolean', 'default' => 0],
         ];
         $data = $this->filterPostData($request, $filter_attrs);
         return $data;

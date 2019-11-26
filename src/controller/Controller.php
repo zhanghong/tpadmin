@@ -8,7 +8,7 @@ use think\facade\View;
 use think\facade\Config;
 use think\facade\Session;
 
-use tpadmin\model\AuthRule as AuthRuleModel;
+use tpadmin\model\Rule as RuleModel;
 use tpadmin\service\auth\facade\Auth;
 
 abstract class Controller
@@ -72,7 +72,7 @@ abstract class Controller
      */
     public function assignCommon()
     {
-        $route_app = app(AuthRuleModel::class);
+        $route_app = app(RuleModel::class);
         $menu_tree = $route_app->toTree();
         $flat_menu = $route_app->flatMenuTree($menu_tree);
 

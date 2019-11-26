@@ -2,8 +2,8 @@
 
 namespace tpadmin\model\traits;
 
-use tpadmin\model\AuthRoleRule;
-use tpadmin\model\AuthRoleUser;
+use tpadmin\model\RoleRule;
+use tpadmin\model\RoleUser;
 use tpadmin\service\auth\facade\Auth;
 
 trait Tree
@@ -146,12 +146,12 @@ trait Tree
             return $this->allNodes();
         }
 
-        $role_ids = AuthRoleUser::where('user_id', $current_adminer->id)->column('role_id');
+        $role_ids = RoleUser::where('user_id', $current_adminer->id)->column('role_id');
         if(empty($role_ids)){
             return [];
         }
 
-        $rule_ids = AuthRoleRule::whereIn('role_id', $role_ids)->column('rule_id');
+        $rule_ids = RoleRule::whereIn('role_id', $role_ids)->column('rule_id');
         if(empty($rule_ids)){
             return [];
         }

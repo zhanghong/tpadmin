@@ -8,8 +8,8 @@ use tpadmin\controller\Controller;
 use tpadmin\exception\ValidateException;
 
 use tpadmin\model\Adminer as AdminerModel;
-use tpadmin\model\AuthRole as AuthRoleModel;
-use tpadmin\model\AuthRoleUser as AuthRoleUserModel;
+use tpadmin\model\Role as RoleModel;
+use tpadmin\model\RoleUser as RoleUserModel;
 
 class Adminer extends Controller
 {
@@ -26,7 +26,7 @@ class Adminer extends Controller
     public function create(Request $request)
     {
         $adminer = [];
-        $roles = AuthRoleModel::select();
+        $roles = RoleModel::select();
         $role_id = 0;
 
         return $this->fetch('auth/adminer/create', compact('adminer', 'role_id', 'roles'));
@@ -55,8 +55,8 @@ class Adminer extends Controller
             return $this->error('未找到被管理员信息');
         }
 
-        $roles = AuthRoleModel::select();
-        $role_user = AuthRoleUserModel::where('user_id', $adminer->id)->find();
+        $roles = RoleModel::select();
+        $role_user = RoleUserModel::where('user_id', $adminer->id)->find();
         if(empty($role_user)){
             $role_id = 0;
         }else{

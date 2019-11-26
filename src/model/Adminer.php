@@ -11,17 +11,12 @@ class Adminer extends Model implements Authenticate
 {
     public function pivotRoles()
     {
-        return $this->hasMany('AuthRoleUser', 'user_id');
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany('AuthRole', '\\tpadmin\\model\\AuthRoleUser', 'role_id', 'user_id');
+        return $this->hasMany('RoleUser', 'user_id', 'id');
     }
 
     public static function onAfterDelete($adminer)
     {
-        AuthRoleUser::where('user_id', $adminer->id)->delete();
+        RoleUser::where('user_id', $adminer->id)->delete();
     }
 
     public function setPasswordAttr($value)
@@ -54,7 +49,7 @@ class Adminer extends Model implements Authenticate
         $config = [];
         $map = self::queryConditions($params);
         $config = ['query' => $map];
-        $paginate = self::with('roles')->where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
+        $paginate = self::with('pivot_roles')->where($map)->order('id', 'ASC')->paginate($page_rows, false, $config);
         return $paginate;
     }
 
@@ -103,13 +98,13 @@ class Adminer extends Model implements Authenticate
         }else if(is_null($role_id)){
             return true;
         }else if($role_id == 0){
-            AuthRoleUser::where('user_id', $this->id)->delete();
+            RoleUser::where('user_id', $this->id)->delete();
             return true;
         }
 
-        $role_user = AuthRoleUser::where('user_id', $this->id)->find();
+        $role_user = RoleUser::where('user_id', $this->id)->find();
         if(empty($role_user)){
-            AuthRoleUser::create(['user_id' => $this->id, 'role_id' => $role_id]);
+            RoleUser::create(['user_id' => $this->id, 'role_id' => $role_id]);
         }else if($role_user->role_id != $role_id){
             $role_user->role_id = $role_id;
             $role_user->save();
@@ -144,10 +139,16 @@ class Adminer extends Model implements Authenticate
 
     public function getRoleTitlesAttr()
     {
-        $titles = [];
-        foreach ($this->roles as $key => $role) {
-            array_push($titles, $role->title);
+        $role_ids = [];
+        foreach ($this->pivotRoles as $key => $pivot) {
+            array_push($role_ids, $pivot->role_id);
         }
-        return implode(',', $titles);
+
+        if (empty($role_ids)){
+            return '';
+        }
+
+        $names = Role::where(['id' => $role_ids])->column('title');
+        return implode(',', $names);
     }
 }

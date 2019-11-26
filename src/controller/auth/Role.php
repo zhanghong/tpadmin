@@ -7,16 +7,18 @@ use think\facade\Session;
 use tpadmin\controller\Controller;
 use tpadmin\exception\ValidateException;
 
-use tpadmin\model\AuthRule as AuthRuleModel;
-use tpadmin\model\AuthRole as AuthRoleModel;
+use tpadmin\model\Rule as RuleModel;
+use tpadmin\model\Role as RoleModel;
 
 class Role extends Controller
 {
     public function index(Request $request)
     {
-        $param_fields = AuthRoleModel::searchFields();
+        $param_fields = [
+            ['param_name' => 'keyword', 'column_name' => 'title', 'mode' => 'like'],
+        ];
         $params = $this->filterSearchData($request, $param_fields);
-        $paginate = AuthRoleModel::paginateSelect($params);
+        $paginate = RoleModel::paginateSelect($params);
 
         return $this->fetch('auth/role/index', [
             'paginate' => $paginate,
@@ -25,8 +27,8 @@ class Role extends Controller
 
     public function create(Request $request)
     {
-        $ruleModel = new AuthRuleModel;
-        $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
+        $ruleModel = new RuleModel;
+        $rule_tree = $ruleModel->toTree(RuleModel::MENU_MODE_ALL);
 
         return $this->fetch('auth/role/form', [
             'rule_ids' => [],
@@ -42,7 +44,7 @@ class Role extends Controller
         $data = $this->getPostData($request);
 
         try{
-            $rule = AuthRoleModel::createItem($data);
+            $rule = RoleModel::createItem($data);
         }catch (ValidateException $e){
             return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         }catch (\Exception $e){
@@ -56,13 +58,13 @@ class Role extends Controller
 
     public function edit(Request $request, $id)
     {
-        $role = AuthRoleModel::find($id);
+        $role = RoleModel::find($id);
         if(empty($role)){
             return $this->redirect('[admin.auth.role.index]');
         }
 
-        $ruleModel = new AuthRuleModel;
-        $rule_tree = $ruleModel->toTree(AuthRuleModel::MENU_MODE_ALL);
+        $ruleModel = new RuleModel;
+        $rule_tree = $ruleModel->toTree(RuleModel::MENU_MODE_ALL);
 
         return $this->fetch('auth/role/form', [
             'role' => $role,
@@ -78,11 +80,11 @@ class Role extends Controller
         $data = $this->getPostData($request);
 
         try{
-            $role = AuthRoleModel::updateItem($id, $data);
+            $role = RoleModel::updateItem($id, $data);
         } catch (ValidateException $e) {
             return $this->error($e->getMessage(), '', ['errors' => $e->getData()]);
         } catch (\Exception $e) {
-            return $this->error($e->getError());
+            return $this->error($e->getMessage());
         }
 
         $success_message = '更新成功';
@@ -101,7 +103,7 @@ class Role extends Controller
         $error_msg = NULL;
 
         try {
-            AuthRoleModel::destroy($id);
+            RoleModel::destroy($id);
         } catch (\Exception $e) {
             $error_msg = $e->getMessage();
         }
@@ -119,7 +121,7 @@ class Role extends Controller
     {
         $filter_attrs = [
             ['name' => 'title', 'type' => 'string', 'default' => ''],
-            ['name' => 'status', 'type' => 'boolean', 'default' => 1],
+            ['name' => 'status', 'type' => 'boolean', 'default' => '0'],
             ['name' => 'rule_ids', 'type' => 'array', 'default' => []],
         ];
         $data = $this->filterPostData($request, $filter_attrs);

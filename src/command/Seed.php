@@ -6,8 +6,9 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use tpadmin\model\Adminer;
-use tpadmin\model\AuthRule;
-use tpadmin\model\AuthRole;
+use tpadmin\model\Rule;
+use tpadmin\model\Role;
+use tpadmin\model\RoleUser;
 
 class Seed extends Command
 {
@@ -84,30 +85,33 @@ class Seed extends Command
 
             $parent_id = 0;
             if(!empty($parent_name)){
-                $parent_rule = AuthRule::where('name', $parent_name)->find();
+                $parent_rule = Rule::where('name', $parent_name)->find();
                 if(!empty($parent_rule)){
                     $parent_id = $parent_rule->id;
                 }
             }
             $data['parent_id'] = $parent_id;
-            $rule = AuthRule::where('name', $data['name'])->find();
+            $rule = Rule::where('name', $data['name'])->find();
             if(empty($rule)){
-                $rule = AuthRule::create($data);
+                $rule = Rule::create($data);
             }else{
-                AuthRule::where('id', $rule->id)->update($data);
+                Rule::where('id', $rule->id)->update($data);
             }
         }
 
         // 默认管理员群组
         $default_role_data = ['title' => '运营', 'status' => 1];
-        $auth_role = AuthRole::where('title', $default_role_data['title'])->find();
+        $auth_role = Role::where('title', $default_role_data['title'])->find();
         if(empty($auth_role)){
-            $auth_role = AuthRole::create($default_role_data);
+            $auth_role = Role::create($default_role_data);
         }else{
-            AuthRole::where('id', $auth_role->id)->update($default_role_data);
+            Role::where('id', $auth_role->id)->update($default_role_data);
         }
 
         $manager = Adminer::where('name', 'manager')->find();
-        $auth_role->users()->attach($manager->id);
+        $data = ['role_id' => $auth_role->id, 'user_id' => $manager->id];
+        if (!RoleUser::where($data)->count()){
+            RoleUser::create($data);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace tpadmin\validate;
 
 use think\Validate;
 
-class AuthRole extends Validate
+class Role extends Validate
 {
     /**
      * 定义验证规则
