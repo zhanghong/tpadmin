@@ -128,6 +128,7 @@ class Rule extends Controller
             ['name' => 'icon', 'type' => 'string', 'default' => ''],
             ['name' => 'condition', 'type' => 'string', 'default' => ''],
             ['name' => 'tips', 'type' => 'string', 'default' => ''],
+            ['name' => 'status', 'type' => 'boolean', 'default' => 0],
         ];
         $data = $this->filterPostData($request, $filter_attrs);
         return $data;

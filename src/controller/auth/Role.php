@@ -119,7 +119,7 @@ class Role extends Controller
     {
         $filter_attrs = [
             ['name' => 'title', 'type' => 'string', 'default' => ''],
-            ['name' => 'status', 'type' => 'boolean', 'default' => 1],
+            ['name' => 'status', 'type' => 'boolean', 'default' => 0],
             ['name' => 'rule_ids', 'type' => 'array', 'default' => []],
         ];
         $data = $this->filterPostData($request, $filter_attrs);

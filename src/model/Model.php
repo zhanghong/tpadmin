@@ -49,6 +49,11 @@ abstract class Model extends Base
         return $this->find($this->id);
     }
 
+    public function getStatusTextAttr()
+    {
+        return $this->status ? '启用' : '禁用' ;
+    }
+
     protected static function queryConditions($params)
     {
         $search_fields = static::searchFields();

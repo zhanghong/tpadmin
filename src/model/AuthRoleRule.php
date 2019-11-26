@@ -6,5 +6,5 @@ use think\model\Pivot;
 
 class AuthRoleRule extends Pivot
 {
-    protected $autoWriteTimestamp = true;
+    protected $autoWriteTimestamp = false;
 }

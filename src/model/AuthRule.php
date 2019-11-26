@@ -12,6 +12,8 @@ class AuthRule extends Model
 
     const USER_ALLOWS = 'user_rules';
 
+    protected $append = ['status_text'];
+
     use traits\Tree;
 
     public function pivotRoles()
@@ -52,6 +54,7 @@ class AuthRule extends Model
         }
         return true;
     }
+
 
     public static function reloadAdminerAllows($is_force)
     {

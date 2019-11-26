@@ -103,25 +103,4 @@ class AuthRole extends Model
         $rule_ids = AuthRoleRule::where('role_id', $this->id)->column('rule_id');
         return $rule_ids;
     }
-
-    // public static function deleteItem($id)
-    // {
-    //     $id = intval($id);
-    //     if($id < 1){
-    //         return true;
-    //     }
-
-    //     $role = self::get($id, 'pivot_rules');
-    //     if(empty($role)){
-    //         return true;
-    //     }
-
-    //     return $role->runDelete();
-    // }
-
-    // public function runDelete()
-    // {
-    //     $this->together('pivot_rules')->delete();
-    //     return true;
-    // }
 }
